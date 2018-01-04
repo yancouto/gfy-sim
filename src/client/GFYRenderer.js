@@ -1,7 +1,7 @@
 "use strict";
 
 const Renderer = require("lance-gg").render.Renderer;
-
+const CardDrawer = require("../client/CardDrawer");
 
 class GFYRenderer extends Renderer {
 
@@ -14,11 +14,8 @@ class GFYRenderer extends Renderer {
 		super.draw();
 
 		let canvas = document.getElementById("canvas");
-
 		let ctx = canvas.getContext("2d");
-
-		ctx.fillStyle = "rgb(255, 0, 0)";
-		ctx.fillRect(10, 10, 50, 100);
+		CardDrawer.drawCard(ctx, "TH", 10, 10);
 	}
 }
 

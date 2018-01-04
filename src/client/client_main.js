@@ -2,7 +2,9 @@
 
 const io = require("socket.io-client");
 
-var socket = io();
+let socket = io();
+
+console.log("my socket is " + socket.sessionid);
 
 const GamestateManager = require("../client/gamestates/GamestateManager").GM;
 const RoomMenu = require("../client/gamestates/RoomMenu");
@@ -28,3 +30,6 @@ socket.on("update", function(data) {
 	// is there reason to wait?
 	socket.emit("request update");
 });
+
+const Utils = require("../common/Utils");
+Utils.client_socket = socket;

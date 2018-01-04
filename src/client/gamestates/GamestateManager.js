@@ -9,7 +9,11 @@ class GamestateManager {
 
 	switch_to(gs) {
 		console.log("Switching from gamestate " + (this.cur_gs? this.cur_gs.name : "null") + " to " + (gs? gs.name : "null"));
+		if(this.cur_gs)
+			this.cur_gs.exit();
 		this.cur_gs = gs; // improve this later, if necessary
+		if(this.cur_gs)
+			this.cur_gs.enter();
 	}
 
 	process(dt) {

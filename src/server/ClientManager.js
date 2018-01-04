@@ -14,6 +14,7 @@ class ClientManager {
 		let self = this;
 		socket.on("disconnect", () => self.rem_client(c));
 		socket.on("request update", () => self.upd_client(c));
+		socket.on("change room", (to) => self.change_room(c, to));
 	}
 
 	rem_client(client) {
@@ -22,11 +23,14 @@ class ClientManager {
 	}
 
 	upd_client(client) {
-		if(client.room === null) {
-			RoomMenu.update_client(client);
-		} else {
-			// TODO
-		}
+		RoomMenu.update_client(client);
+	}
+
+	change_room(client, new_room) {
+		if(client.room)
+			RoomMenu.quit_room(client);
+		if(new_room)
+			RoomMenu.change_to_room(client, new_room);
 	}
 }
 

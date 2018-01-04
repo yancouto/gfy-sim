@@ -5,6 +5,10 @@ class Gamestate {
 	constructor() {
 		this.name = "unnamed";
 	}
+	// Called once when you enter the gamestate
+	enter() {}
+	// Called once when you exit the gamestate
+	exit() {}
 	// Updates the state
 	update(dt) {}
 	// Draws on screen

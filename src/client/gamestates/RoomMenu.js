@@ -3,6 +3,9 @@
 const Gamestate = require("./Gamestate");
 const CardDrawer = require("../../client/CardDrawer");
 const RenderUtils = require("../../client/RenderUtils");
+const GamestateManager = require("./GamestateManager").GM;
+const Utils = require("../../common/Utils");
+const RoomGamestate = require("./RoomGamestate");
 
 class RoomMenu extends Gamestate {
 
@@ -51,6 +54,16 @@ class RoomMenu extends Gamestate {
 
 	on_button_click() {
 		console.log("button clicked");
+		let name = this.frm.children[0].value;
+		if(/^\w{2,20}$/.test(name)) {
+			console.log("Switching to room " + name);
+			GamestateManager.switch_to(new RoomGamestate());
+			Utils.client_socket.emit("change room", name);
+		}
+	}
+
+	exit() {
+		this.frm.parentNode.removeChild(this.frm);
 	}
 }
 

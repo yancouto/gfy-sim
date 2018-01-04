@@ -2,7 +2,7 @@
 	"name": "gfy_simulator",
 	"version": "0.0.1",
 	"description": "Go Fuck Yourself Simulator",
-	"main": "main.js",
+	"main": "src/server/server_main.js",
 	"engines": {
 		"node": "6.11.1"
 	},
@@ -15,7 +15,7 @@
 		"eslint": "^3.10.2"
 	},
 	"scripts": {
-		"start": "node main.js",
+		"start": "node src/server/server_main.js",
 		"build": "webpack"
 	},
 	"repository": {
@@ -24,7 +24,8 @@
 	},
 	"keywords": [
 		"game",
-		"simulator"
+		"simulator",
+		"multiplayer"
 	],
 	"author": "Yan Couto",
 	"license": "WTFPL",

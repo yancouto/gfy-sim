@@ -1,3 +1,5 @@
+// Helper to draw cards on the screen
+"use strict";
 const CardDrawer = module.exports = {};
 
 const img = new Image();

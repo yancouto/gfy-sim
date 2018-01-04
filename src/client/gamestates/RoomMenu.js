@@ -1,7 +1,14 @@
+// Gamestate for the room menu, where you can create or join a room.
+"use strict";
 const Gamestate = require("./Gamestate");
 const CardDrawer = require("../../client/CardDrawer");
 
 class RoomMenu extends Gamestate {
+
+	constructor() {
+		super();
+		this.name = "RoomMenu";
+	}
 
 	update(dt) {
 		super.update(dt);

@@ -1,3 +1,5 @@
+// Manages current gamestate and switching
+"use strict";
 const RenderUtils = require("../../client/RenderUtils");
 
 class GamestateManager {
@@ -6,6 +8,7 @@ class GamestateManager {
 	}
 
 	switch_to(gs) {
+		console.log("Switching from gamestate " + (this.cur_gs? this.cur_gs.name : "null") + " to " + (gs? gs.name : "null"));
 		this.cur_gs = gs; // improve this later, if necessary
 	}
 
@@ -15,6 +18,11 @@ class GamestateManager {
 			this.cur_gs.draw(RenderUtils.ctx);
 		}
 	}
+
+	get current_gamestate() { return cur_gs; }
 }
+
+// main GamestateManager
+GamestateManager.GM = new GamestateManager();
 
 module.exports = GamestateManager;

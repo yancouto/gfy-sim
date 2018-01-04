@@ -1,3 +1,4 @@
+// Useful Rendering stuff
 "use strict";
 
 const RU = module.exports = {};

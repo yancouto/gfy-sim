@@ -3,6 +3,23 @@
 const Renderer = require("lance-gg").render.Renderer;
 const CardDrawer = require("../client/CardDrawer");
 
+var W, H;
+
+function updateDimensions() {
+	W = document.documentElement.clientWidth - 20;
+	H = document.documentElement.clientHeight - 20;
+	let canvas = document.getElementById("canvas");
+	if(canvas) {
+		canvas.width = W;
+		canvas.height = H;
+	}
+	console.log("Now " + W + " x " + H);
+}
+
+updateDimensions();
+window.addEventListener('resize', updateDimensions);
+window.addEventListener('load', updateDimensions);
+
 class GFYRenderer extends Renderer {
 
 	constructor(gameEngine, clientEngine) {

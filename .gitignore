@@ -1,0 +1,3 @@
+*.trace
+dist/
+node_modules/

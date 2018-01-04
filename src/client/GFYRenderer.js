@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 
-const Renderer = require('lance-gg').render.Renderer;
+const Renderer = require("lance-gg").render.Renderer;
 
 
 class GFYRenderer extends Renderer {
@@ -13,11 +13,11 @@ class GFYRenderer extends Renderer {
 	draw() {
 		super.draw();
 
-		let canvas = document.getElementById('canvas');
+		let canvas = document.getElementById("canvas");
 
-		let ctx = canvas.getContext('2d');
+		let ctx = canvas.getContext("2d");
 
-		ctx.fillStyle = 'rgb(255, 0, 0)';
+		ctx.fillStyle = "rgb(255, 0, 0)";
 		ctx.fillRect(10, 10, 50, 100);
 	}
 }

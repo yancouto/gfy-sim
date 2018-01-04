@@ -1,19 +1,19 @@
-const qsOptions = require('query-string').parse(location.search);
-const GFYClientEngine = require('../client/GFYClientEngine');
-const GFYGameEngine = require('../common/GFYGameEngine');
-const SimplePhysicsEngine = require('lance-gg').physics.SimplePhysicsEngine;
+const qsOptions = require("query-string").parse(location.search);
+const GFYClientEngine = require("../client/GFYClientEngine");
+const GFYGameEngine = require("../common/GFYGameEngine");
+const SimplePhysicsEngine = require("lance-gg").physics.SimplePhysicsEngine;
 
 // default options, overwritten by query-string options
 // are sent to both game engine and client engine
 const defaults = {
-    traceLevel: 0,
-    delayInputCount: 8,
-    clientIDSpace: 1000000,
-    syncOptions: {
-        sync: qsOptions.sync || 'extrapolate',
-        localObjBending: 0.2,
-        remoteObjBending: 0.5
-    }
+	traceLevel: 0,
+	delayInputCount: 8,
+	clientIDSpace: 1000000,
+	syncOptions: {
+		sync: qsOptions.sync || "extrapolate",
+		localObjBending: 0.2,
+		remoteObjBending: 0.5
+	}
 };
 let options = Object.assign(defaults, qsOptions);
 

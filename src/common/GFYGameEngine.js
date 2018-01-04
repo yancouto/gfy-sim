@@ -1,17 +1,17 @@
-'use strict';
+"use strict";
 
-const GameEngine = require('lance-gg').GameEngine;
+const GameEngine = require("lance-gg").GameEngine;
 
 class GFYGameEngine extends GameEngine {
 
 	start() {
 		super.start();
-		console.log('Starting GameEngine');
+		console.log("Starting GameEngine");
 	}
 
 	processInput(inputData, playerId) {
 		super.processInput(inputData, playerId);
-		console.log('processInput');
+		console.log("processInput");
 	}
 }
 

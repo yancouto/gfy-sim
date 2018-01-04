@@ -1,3 +1,4 @@
 *.trace
 dist/
 node_modules/
+*.swp

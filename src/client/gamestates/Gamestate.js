@@ -5,8 +5,12 @@ class Gamestate {
 	constructor() {
 		this.name = "unnamed";
 	}
+	// Updates the state
 	update(dt) {}
+	// Draws on screen
 	draw(ctx) {}
+	// Syncs with data from server
+	sync_to_server(data) {}
 }
 
 module.exports = Gamestate;

@@ -21,5 +21,5 @@ CardDrawer.drawCard = function(ctx, card, x, y, w, h) {
 	h = h || (w / cw) * ch;
 	ctx.lineWidth = 2; // thickness
 	ctx.drawImage(img, map[card.charCodeAt(0)] * cw, map[card.charCodeAt(1)] * ch, cw, ch, x, y, w, h);
-	ctx.strokeRect(x, y, w, h)
+	ctx.strokeRect(x, y, w, h);
 };

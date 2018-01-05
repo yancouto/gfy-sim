@@ -31,7 +31,19 @@ RU.set_font = function(size, type) {
 	RU.ctx.font = RU.font_height + "px " + (type || "sans-serif");
 };
 
-RU.draw_centered_text = function(text, x, y) {
+RU.ALIGN_LEFT = RU.ALIGN_TOP = 0;
+RU.ALIGN_CENTER = 1;
+RU.ALIGN_RIGHT = RU.ALIGN_BOTTOM = 2;
+// align horizontal and vertical
+RU.draw_text_align = function(text, x, y, h_align, v_align) {
 	let sz = RU.ctx.measureText(text);
-	RU.ctx.fillText(text, x - sz.width / 2, y - RU.font_height / 2);
+	if(h_align === undefined || h_align === 1)
+		x -= sz.width / 2;
+	else if(h_align === 2)
+		x -= sz.width;
+	if(v_align === undefined || v_align === 1)
+		y += RU.font_height / 2;
+	else if(v_align === 0)
+		y += RU.font_height;
+	RU.ctx.fillText(text, x, y);
 };

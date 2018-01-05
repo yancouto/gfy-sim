@@ -25,11 +25,17 @@ class RoomGamestate extends Gamestate {
 		ctx.drawImage(this.background, 0, 0, RU.W * sc, RU.H * sc, 0, 0, RU.W, RU.H);
 		if(!this.room) {
 			RU.set_font(40);
-			RU.draw_centered_text("Loading...", RU.W / 2, RU.H / 2);
+			ctx.fillStyle = "rgb(0, 0, 0)";
+			RU.draw_text_align("Loading...", RU.W / 2, RU.H / 2);
 			return;
 		}
 
+		ctx.fillStyle = "rgb(0, 0, 0)";
 		CardDrawer.draw_hand_horizontal(ctx, this.me.hand, RU.W * .1, RU.H * .7, RU.W * .8, RU.H * .3 - 10);
+
+		ctx.fillStyle = "rgb(255, 255, 255)";
+		RU.set_font(12);
+		RU.draw_text_align("Room Code: " + this.room.name, RU.W - 10, RU.H - 10, RU.ALIGN_RIGHT, RU.ALIGN_BOTTOM);
 	}
 
 	sync_to_server(data) {

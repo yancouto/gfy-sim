@@ -13,12 +13,16 @@ class RoomGamestate extends Gamestate {
 		this.name = "Room";
 		this.room = null;
 		this.me = null;
+		this.background = new Image();
+		this.background.src = "assets/felt.jpg";
 	}
 
 	update(dt) {
 	}
 
 	draw(ctx) {
+		let sc = Math.min(3000 / RU.W, 2001 / RU.H);
+		ctx.drawImage(this.background, 0, 0, RU.W * sc, RU.H * sc, 0, 0, RU.W, RU.H);
 		if(!this.room) {
 			RU.set_font(40);
 			RU.draw_centered_text("Loading...", RU.W / 2, RU.H / 2);

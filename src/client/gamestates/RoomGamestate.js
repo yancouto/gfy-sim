@@ -5,16 +5,25 @@ const RU = require("../../client/RenderUtils");
 const Utils = require("../../common/Utils");
 const Room = require("../../common/Room");
 const CardDrawer = require("../../client/CardDrawer");
+const RoomInputHandler = require("./RoomInputHandler");
 
 class RoomGamestate extends Gamestate {
 
 	constructor() {
 		super();
 		this.name = "Room";
-		this.room = null;
-		this.me = null;
 		this.background = new Image();
 		this.background.src = "assets/felt.jpg";
+	}
+
+	enter() {
+		this.room = null;
+		this.me = null;
+		this.input_handler = new RoomInputHandler();
+	}
+
+	exit() {
+		this.input_handler.destroy();
 	}
 
 	update(dt) {

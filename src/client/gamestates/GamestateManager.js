@@ -32,8 +32,9 @@ class GamestateManager {
 				this.cur_gs.sync_to_server(data);
 		} else
 			console.log("Data on null gamestate.");
-
 	}
+
+	get current_gamestate() { return this.cur_gs; }
 }
 
 // main GamestateManager

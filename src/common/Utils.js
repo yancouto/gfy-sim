@@ -7,3 +7,7 @@ Utils.clamp = function(x, min, max) {
 	if(x > max) return max;
 	return x;
 };
+
+Utils.point_in_rect = function(x, y, xr, yr, wr, hr) {
+	return !(x < xr || x > xr + wr || y < yr || y > yr + hr);
+};

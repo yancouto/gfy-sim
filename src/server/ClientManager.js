@@ -15,11 +15,12 @@ class ClientManager {
 		socket.on("disconnect", () => self.rem_client(c));
 		socket.on("request update", () => self.upd_client(c));
 		socket.on("change room", (to) => self.change_room(c, to));
+		socket.on("play card", (index) => self.play_card(c, index));
 	}
 
 	rem_client(client) {
 		console.log("client disconnected " + client.socket.id);
-		if(client.room)
+		if(client.on_game)
 			RoomMenu.quit_room(client);
 		this.id_to_client.delete(client.socket.id);
 	}
@@ -29,10 +30,15 @@ class ClientManager {
 	}
 
 	change_room(client, new_room) {
-		if(client.room)
+		if(client.on_game)
 			RoomMenu.quit_room(client);
 		if(new_room)
 			RoomMenu.change_to_room(client, new_room);
+	}
+
+	play_card(client, index) {
+		if(!client.on_game) return;
+		client.game.play_card(client.id, index);
 	}
 }
 

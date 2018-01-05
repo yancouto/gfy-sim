@@ -1,48 +1,48 @@
 // Manages room list
 "use strict";
 
-const Room = require("../common/Room");
+const GameLogic = require("../server/GameLogic");
 
 class RoomMenu {
 	constructor() {
-		this.room_list = [];
+		this.game_list = [];
 	}
 
 	update_client(client) {
 		let data;
-		if(client.room == null) {
+		if(client.game == null) {
 			data = {
-				room_list: Array.from(this.room_list, (r) => r.name),
+				room_list: Array.from(this.game_list, (r) => r.room.name),
 				name: "RoomMenu"
 			};
 		} else
 			data = {
-				room: client.room,
+				room: client.game.room,
 				name: "Room"
 			};
 		client.socket.emit("update", data);
 	}
 
-	get_room(room_name) {
-		let room = this.room_list.find((r) => r.name === room_name);
-		if(!room) {
-			room = new Room(room_name);
-			this.room_list.push(room);
+	get_game(room_name) {
+		let game = this.game_list.find((r) => r.room.name === room_name);
+		if(!game) {
+			game = new GameLogic(room_name);
+			this.game_list.push(game);
 		}
-		return room;
+		return game;
 	}
 
 	quit_room(client) {
-		console.log("Exiting room " + client.room.name);
-		client.room.rem_player(client.id);
-		client.room = null;
+		console.log("Exiting room " + client.game.room.name);
+		client.game.rem_player(client.id);
+		client.game = null;
 	}
 
 	change_to_room(client, room_name) {
 		console.log("Switching to room " + room_name);
-		let room = this.get_room(room_name);
-		room.add_player(client.id);
-		client.room = room;
+		let game = this.get_game(room_name);
+		game.add_player(client.id);
+		client.game = game;
 	}
 }
 

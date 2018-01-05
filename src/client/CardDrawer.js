@@ -2,6 +2,9 @@
 "use strict";
 const CardDrawer = module.exports = {};
 
+const PRNG = require("../external/PRNG");
+const random = new PRNG(12);
+
 const ClassicDeck = require("../client/decks/ClassicDeck"); // eslint-disable-line no-unused-vars
 const SimianDeck = require("../client/decks/SimianDeck");
 
@@ -37,4 +40,20 @@ CardDrawer.draw_hand_horizontal = function(ctx, hand, x, y, w, h, hide) {
 	let ow = (w - ((hl - 1) * dw + cw)) / 2;
 	for(let i = 0; i < hl; i++)
 		CardDrawer.draw_card(ctx, hide? "??" : hand[i], x + ow + dw * i, y + ((h - ch) / 2), cw, ch, hide);
+};
+
+CardDrawer.draw_played_cards = function(ctx, cards, x, y, w, h, seed) {
+	const sq2 = Math.sqrt(2);
+	let [cw, ch] = CardDrawer.fix_size(w / sq2, h / sq2);
+	ctx.save();
+	ctx.translate(x + w / 2, y + h / 2);
+	random._seed = seed || random._seed;
+	for(let i = 0; i < cards.length; i++) {
+		let ang = (random.nextFloat() - .5) * (Math.PI / 2);
+		ctx.save();
+		ctx.rotate(ang);
+		CardDrawer.draw_card(ctx, cards[i], -cw / 2, -ch / 2, cw, ch);
+		ctx.restore();
+	}
+	ctx.restore();
 };

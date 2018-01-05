@@ -10,15 +10,15 @@ class Room {
 	constructor(name) {
 		this.name = name;
 		this.player_list = [];
-		this.played_cards = ["AC", "9H"];
-		for(let i = 0; i < 10; i++)
-			this.played_cards.push("5S");
+		this.played_cards = [];
 		this.starting_angle = 0;
 		this.seed = 12;
 	}
 
 	add_player(pid) {
-		this.player_list.push(new PlayerInfo(pid));
+		let pi = new PlayerInfo(pid);
+		this.player_list.push(pi);
+		return pi;
 	}
 
 	rem_player(pid) {

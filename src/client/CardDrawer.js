@@ -6,7 +6,7 @@ const PRNG = require("../external/PRNG");
 const random = new PRNG(12);
 
 const ClassicDeck = require("../client/decks/ClassicDeck"); // eslint-disable-line no-unused-vars
-const SimianDeck = require("../client/decks/SimianDeck");
+const SimianDeck = require("../client/decks/SimianDeck"); // eslint-disable-line no-unused-vars
 
 let deck = SimianDeck;
 
@@ -48,12 +48,33 @@ CardDrawer.draw_played_cards = function(ctx, cards, x, y, w, h, seed) {
 	ctx.save();
 	ctx.translate(x + w / 2, y + h / 2);
 	random._seed = seed || random._seed;
+	let prev_angle = undefined;
 	for(let i = 0; i < cards.length; i++) {
-		let ang = (random.nextFloat() - .5) * (Math.PI / 2);
+		let ang;
+		if(prev_angle == undefined)
+			ang = (random.nextFloat() - .5) * (Math.PI / 2);
+		else {
+			ang = -Math.PI / 4 + (random.nextFloat() * Math.PI * .3);
+			if(Math.abs(ang - prev_angle) <= .1 * Math.PI)
+				ang += Math.PI * .2;
+		}
+		prev_angle = ang;
 		ctx.save();
 		ctx.rotate(ang);
 		CardDrawer.draw_card(ctx, cards[i], -cw / 2, -ch / 2, cw, ch);
 		ctx.restore();
 	}
 	ctx.restore();
+};
+
+CardDrawer.draw_stack = function(ctx, x, y, w, h) {
+	const n = 13;
+	let [cw, ch] = CardDrawer.fix_size(w * .8, h * .95);
+	let dw = cw * (.2 / .8) / (n - 1);
+	let ow = (w - dw * (n - 1) - cw) / 2;
+
+	let dh = ch * (.05 / .95) / (n - 1);
+	let oh = (h - dh * (n - 1) - ch) / 2;
+	for(let i = 0; i < n; i++)
+		CardDrawer.draw_card(ctx, "??", x + ow + dw * i, y + oh + dh * i, cw, ch, true);
 };

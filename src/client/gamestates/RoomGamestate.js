@@ -46,6 +46,8 @@ class RoomGamestate extends Gamestate {
 		}
 
 		CardDrawer.draw_played_cards(ctx, this.room.played_cards, RU.W / 4, RU.H * .3, RU.W / 2, RU.H * .3, this.room.seed);
+
+		CardDrawer.draw_stack(ctx, RU.W * .8, RU.H * .3, RU.W * .15, RU.H * .3);
 	}
 
 	sync_to_server(data) {

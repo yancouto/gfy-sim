@@ -40,12 +40,12 @@ class RoomMenu extends Gamestate {
 		let W = RenderUtils.W, H = RenderUtils.H;
 		this.frm.style.left = Math.floor((W - this.frm.offsetWidth) / 2);
 		this.frm.style.top = Math.floor(H * .05 - this.frm.offsetHeight / 2);
-		RenderUtils.setFont(22);
-		RenderUtils.drawCenteredText("Currently Open Rooms", W / 2, H * .3);
+		RenderUtils.set_font(22);
+		RenderUtils.draw_centered_text("Currently Open Rooms", W / 2, H * .3);
 		let from = H * .35, to = H * .95;
-		RenderUtils.setFont(10);
+		RenderUtils.set_font(10);
 		for(let i = 0; i < this.room_list.length; i++)
-			RenderUtils.drawCenteredText(this.room_list[i], W / 2, from + (to - from) / (this.room_list.length + 1) * (i + 1));
+			RenderUtils.draw_centered_text(this.room_list[i], W / 2, from + (to - from) / (this.room_list.length + 1) * (i + 1));
 	}
 
 	sync_to_server(data) {

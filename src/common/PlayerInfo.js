@@ -4,7 +4,7 @@
 class PlayerInfo {
 	constructor(pid) {
 		this.pid = pid;
-		this.hand = ["AS", "TH", "7C", "4D"];
+		this.hand = ["5C", "KD", "AS"];
 	}
 }
 

@@ -9,7 +9,10 @@ class GameLogic {
 	constructor(room_name) {
 		this.room = new Room(room_name);
 		this.room.played_cards.push(this.get_next_card());
-		this.silent = false;
+		this.silent = false; // used for 4
+		this.must_draw = 0; // used for 7
+		this.can_change_suit = false; // used for 8
+		this.current_suit = null; // used for 8
 		this.turn_i = null;
 		this.dir = +1;
 		this.effect = {};
@@ -39,7 +42,7 @@ class GameLogic {
 		let top = this.room.played_cards[this.room.played_cards.length - 1];
 		let nxt = this.room.played_cards.length > 1? this.room.played_cards[this.room.played_cards.length - 2] : null;
 		// normal play
-		if(this.turn_i === i && (card[0] === top[0] || card[1] === top[1]))
+		if(this.turn_i === i && (card[0] === top[0] || card[1] === (this.current_suit || top[1])))
 			return true;
 		// provolone
 		if(this.effect[card[0]] !== "2" && card[0] === top[0] && card[1] === top[1]) {
@@ -54,7 +57,10 @@ class GameLogic {
 				if(this.effect[c] === "5") sum += 5;
 				else sum += parseInt(c.replace("A", "1"), 10);
 			}
-			if(sum == 10) return true;
+			if(sum == 10) {
+				this.turn_i = i;
+				return true;
+			}
 		}
 		return false;
 	}
@@ -75,9 +81,24 @@ class GameLogic {
 
 			// Queen --- reverses order
 			if(this.effect[c[0]] === "Q") this.dir = -this.dir;
-			// 9 --- previous buys one, does not stack
+			// 9 --- previous player draws one, does not stack
 			if(this.effect[c[0]] === "9")
 				this.room.player_list[this.clamp_to_players(this.turn_i - this.dir)].add_to_hand(this.get_next_card());
+			// 4 --- silence rule
+			if(this.effect[c[0]] === "4")
+				this.silent = !this.silent;
+			// 7 --- next player draws two, stacks
+			if(this.effect[c[0]] === "7")
+				this.must_draw = this.must_draw + 2;
+			else {
+				for(let j = 0; j < this.must_draw; j++)
+					pi.add_to_hand(this.get_next_card());
+				this.must_draw = 0;
+			}
+			this.current_suit = null;
+			// 8 --- can change suit
+			this.can_change_suit = (this.effect[c[0]] === "8");
+
 			this.turn_i = this.clamp_to_players(this.turn_i + this.dir * (this.effect[c[0]] == "A"? 2 : 1));
 		} else {
 			pi.add_to_hand(this.get_next_card(), this.get_next_card());

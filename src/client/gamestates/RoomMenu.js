@@ -6,6 +6,7 @@ const RenderUtils = require("../../client/RenderUtils");
 const GamestateManager = require("./GamestateManager").GM;
 const Utils = require("../../common/Utils");
 const RoomGamestate = require("./RoomGamestate");
+const WaitRoom = require("./WaitRoom");
 
 class RoomMenu extends Gamestate {
 
@@ -57,7 +58,7 @@ class RoomMenu extends Gamestate {
 		let name = this.frm.children[0].value;
 		if(/^\w{2,20}$/.test(name)) {
 			console.log("Switching to room " + name);
-			GamestateManager.switch_to(new RoomGamestate());
+			GamestateManager.switch_to(new WaitRoom());
 			Utils.client_socket.emit("change room", name);
 		}
 	}

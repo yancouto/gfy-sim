@@ -15,6 +15,8 @@ class Gamestate {
 	draw(ctx) {}
 	// Syncs with data from server
 	sync_to_server(data) {}
+	// Received data for wrong gamestate
+	wrong_data(data) {}
 }
 
 module.exports = Gamestate;

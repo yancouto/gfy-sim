@@ -25,10 +25,11 @@ window.addEventListener("load", function() {
 
 socket.emit("request update");
 
-socket.on("update", function(data) {
+socket.on("update", function(data, do_not_request_more) {
 	GamestateManager.sync_data(data);
 	// is there reason to wait?
-	socket.emit("request update");
+	if(!do_not_request_more)
+		socket.emit("request update");
 });
 
 const Utils = require("../common/Utils");

@@ -26,9 +26,10 @@ class GamestateManager {
 
 	sync_data(data) {
 		if(this.cur_gs !== null) {
-			if(data.name != this.cur_gs.name)
+			if(data.name != this.cur_gs.name) {
 				console.log("Data for wrong gamestate (" + data.name  + " vs " + this.cur_gs.name + ").");
-			else
+				this.cur_gs.wrong_data(data);
+			} else
 				this.cur_gs.sync_to_server(data);
 		} else
 			console.log("Data on null gamestate.");

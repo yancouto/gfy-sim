@@ -16,6 +16,8 @@ class ClientManager {
 		socket.on("request update", () => self.upd_client(c));
 		socket.on("change room", (to) => self.change_room(c, to));
 		socket.on("play card", (index) => self.play_card(c, index));
+		socket.on("i will start", () => self.i_will_start(c));
+		socket.on("i am ready", () => self.i_am_ready(c));
 	}
 
 	rem_client(client) {
@@ -30,7 +32,7 @@ class ClientManager {
 	}
 
 	change_room(client, new_room) {
-		if(client.on_game)
+		if(client.on_room)
 			RoomMenu.quit_room(client);
 		if(new_room)
 			RoomMenu.change_to_room(client, new_room);
@@ -39,6 +41,16 @@ class ClientManager {
 	play_card(client, index) {
 		if(!client.on_game) return;
 		client.game.play_card(client.id, index);
+	}
+
+	i_will_start(client) {
+		if(!client.wait_room) return;
+		client.wait_room.i_will_start(client.id);
+	}
+
+	i_am_ready(client) {
+		if(!client.wait_room) return;
+		client.wait_room.i_am_ready(client.id);
 	}
 }
 

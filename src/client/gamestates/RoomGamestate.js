@@ -38,20 +38,19 @@ class RoomGamestate extends Gamestate {
 			RU.draw_text_align("Loading...", RU.W / 2, RU.H / 2);
 			return;
 		}
+		let m_i = this.room.player_list.findIndex(p => p.pid === this.me.pid);
 
 		ctx.fillStyle = "rgb(255, 255, 255)";
 		RU.set_font(12);
 		RU.draw_text_align("Room Code: " + this.room.name, RU.W - 10, RU.H - 10, RU.ALIGN_RIGHT, RU.ALIGN_BOTTOM);
 
 		ctx.fillStyle = "rgb(0, 0, 0)";
-		CardDrawer.draw_hand_horizontal(ctx, this.me.hand, RU.W * .1, RU.H * .7, RU.W * .8, RU.H * .3 - 10);
+		CardDrawer.draw_hand_horizontal(ctx, this.me.hand, RU.W * .1, RU.H * .7, RU.W * .8, RU.H * .3 - 10, false, this.room.turn_i === m_i? "rgb(255, 0, 0)" : undefined);
 
-		let m_i;
-		for(m_i = 0; this.room.player_list[m_i].pid !== this.me.pid; m_i++);
 		const pl = this.room.player_list.length;
 		for(let i = 1; i < pl; i++) {
 			let j = (m_i + i) % pl;
-			CardDrawer.draw_hand_horizontal(ctx, this.room.player_list[j].hand, (i - 1) * (RU.W / (pl - 1)), 10, RU.W / (pl - 1), RU.H * .2, true);
+			CardDrawer.draw_hand_horizontal(ctx, this.room.player_list[j].hand, (i - 1) * (RU.W / (pl - 1)), 10, RU.W / (pl - 1), RU.H * .2, true, this.room.turn_i === j? "rgb(255, 0, 0)" : undefined);
 		}
 
 		CardDrawer.draw_played_cards(ctx, this.room.played_cards, RU.W / 4, RU.H * .3, RU.W / 2, RU.H * .3, this.room.seed);

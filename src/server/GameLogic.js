@@ -9,12 +9,7 @@ class GameLogic {
 	constructor(room_name) {
 		this.room = new Room(room_name);
 		this.room.played_cards.push(this.get_next_card());
-		this.silent = false; // used for 4
-		this.must_draw = 0; // used for 7
 		this.can_change_suit = false; // used for 8
-		this.current_suit = null; // used for 8
-		this.turn_i = null;
-		this.dir = +1;
 		this.effect = {};
 		for(let c of "A23456789TJQK")
 			this.effect[c] = c;
@@ -25,28 +20,29 @@ class GameLogic {
 		for(let i = 0; i < INITIAL_HAND_SIZE; i++)
 			pi.hand.push(this.get_next_card());
 		pi.sort_hand();
-		if(this.turn_i === null)
-			this.turn_i = 0;
+		if(this.room.turn_i === null)
+			this.room.turn_i = 0;
 	}
 
 	rem_player(pid) {
 		let i = this.room.player_list.findIndex(p => p.pid === pid);
 		this.room.rem_player(pid);
 		if(this.room.player_list.length === 0)
-			this.turn_i = null;
-		else if(this.turn_i === i)
-			this.turn_i = (this.turn_i + 1) % this.room.player_list.length;
+			this.room.turn_i = null;
+		else if(this.room.turn_i === i)
+			this.room.turn_i = (this.room.turn_i + 1) % this.room.player_list.length;
 	}
 
 	do_play(i, card) {
-		let top = this.room.played_cards[this.room.played_cards.length - 1];
-		let nxt = this.room.played_cards.length > 1? this.room.played_cards[this.room.played_cards.length - 2] : null;
+		const r = this.room;
+		let top = r.played_cards[r.played_cards.length - 1];
+		let nxt = r.played_cards.length > 1? r.played_cards[r.played_cards.length - 2] : null;
 		// normal play
-		if(this.turn_i === i && (card[0] === top[0] || card[1] === (this.current_suit || top[1])))
+		if(r.turn_i === i && (card[0] === top[0] || card[1] === (r.current_suit || top[1])))
 			return true;
 		// provolone
 		if(this.effect[card[0]] !== "2" && card[0] === top[0] && card[1] === top[1]) {
-			this.turn_i = i;
+			r.turn_i = i;
 			return true;
 		}
 		// 10 rule
@@ -58,7 +54,7 @@ class GameLogic {
 				else sum += parseInt(c.replace("A", "1"), 10);
 			}
 			if(sum == 10) {
-				this.turn_i = i;
+				r.turn_i = i;
 				return true;
 			}
 		}
@@ -72,37 +68,40 @@ class GameLogic {
 	}
 
 	play_card(pid, index) {
-		let i = this.room.player_list.findIndex(p => p.pid === pid);
-		let pi = this.room.player_list[i];
+		const r = this.room;
+		let i = r.player_list.findIndex(p => p.pid === pid);
+		let pi = r.player_list[i];
 		let c = pi.hand[index];
 		if(this.do_play(i, c)) {
 			pi.hand = pi.hand.filter((c, id) => id != index);
-			this.room.played_cards.push(c);
+			r.played_cards.push(c);
 
 			// Queen --- reverses order
-			if(this.effect[c[0]] === "Q") this.dir = -this.dir;
+			if(this.effect[c[0]] === "Q") r.dir = -r.dir;
 			// 9 --- previous player draws one, does not stack
 			if(this.effect[c[0]] === "9")
-				this.room.player_list[this.clamp_to_players(this.turn_i - this.dir)].add_to_hand(this.get_next_card());
+				r.player_list[this.clamp_to_players(r.turn_i - r.dir)].add_to_hand(this.get_next_card());
 			// 4 --- silence rule
 			if(this.effect[c[0]] === "4")
-				this.silent = !this.silent;
+				r.silent = !r.silent;
 			// 7 --- next player draws two, stacks
 			if(this.effect[c[0]] === "7")
-				this.must_draw = this.must_draw + 2;
+				r.must_draw = r.must_draw + 2;
 			else {
-				for(let j = 0; j < this.must_draw; j++)
+				for(let j = 0; j < r.must_draw; j++)
 					pi.add_to_hand(this.get_next_card());
-				this.must_draw = 0;
+				r.must_draw = 0;
 			}
-			this.current_suit = null;
+			r.current_suit = null;
 			// 8 --- can change suit
 			this.can_change_suit = (this.effect[c[0]] === "8");
 
-			this.turn_i = this.clamp_to_players(this.turn_i + this.dir * (this.effect[c[0]] == "A"? 2 : 1));
+			r.turn_i = this.clamp_to_players(r.turn_i + r.dir * (this.effect[c[0]] == "A"? 2 : 1));
 		} else {
 			pi.add_to_hand(this.get_next_card(), this.get_next_card());
 		}
+		while(r.played_cards.length > 10)
+			r.remove_last_card_from_played();
 	}
 
 	get_next_card() {

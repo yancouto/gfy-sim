@@ -13,6 +13,11 @@ class Room {
 		this.played_cards = [];
 		this.starting_angle = 0;
 		this.seed = 12;
+		this.silent = false; // used for 4
+		this.turn_i = null;
+		this.dir = +1;
+		this.must_draw = 0; // used for 7
+		this.current_suit = null; // used for 8
 	}
 
 	add_player(pid) {

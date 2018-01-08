@@ -2,7 +2,6 @@
 "use strict";
 
 const PCControls = require("./RoomPCControls");
-const GamestateManager = require("./GamestateManager").GM;
 const Utils = require("../../common/Utils");
 
 class RoomInputHandler {

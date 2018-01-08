@@ -10,13 +10,13 @@ class Gamestate {
 	// Called once when you exit the gamestate
 	exit() {}
 	// Updates the state
-	update(dt) {}
+	update(dt) {} // eslint-disable-line no-unused-vars
 	// Draws on screen
-	draw(ctx) {}
+	draw(ctx) {} // eslint-disable-line no-unused-vars
 	// Syncs with data from server
-	sync_to_server(data) {}
+	sync_to_server(data) {} // eslint-disable-line no-unused-vars
 	// Received data for wrong gamestate
-	wrong_data(data) {}
+	wrong_data(data) {} // eslint-disable-line no-unused-vars
 }
 
 module.exports = Gamestate;

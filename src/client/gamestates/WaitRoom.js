@@ -49,6 +49,8 @@ class WaitRoom extends Gamestate {
 
 		this.ready_but.style.left = Math.floor((W - this.ready_but.offsetWidth) / 2);
 		this.ready_but.style.top = Math.floor(H * .4 - this.ready_but.offsetHeight / 2);
+
+		RU.draw_text_align("Ready: " + this.confirmed_total + " out of " + this.total, W / 2,  H * .6, RU.ALIGN_CENTER, RU.ALIGN_CENTER);
 	}
 
 	sync_to_server(data) {

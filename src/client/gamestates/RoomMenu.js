@@ -1,11 +1,9 @@
 // Gamestate for the room menu, where you can create or join a room.
 "use strict";
 const Gamestate = require("./Gamestate");
-const CardDrawer = require("../../client/CardDrawer");
 const RenderUtils = require("../../client/RenderUtils");
 const GamestateManager = require("./GamestateManager").GM;
 const Utils = require("../../common/Utils");
-const RoomGamestate = require("./RoomGamestate");
 const WaitRoom = require("./WaitRoom");
 
 class RoomMenu extends Gamestate {

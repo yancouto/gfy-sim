@@ -26,7 +26,7 @@ class RoomGamestate extends Gamestate {
 		this.input_handler.destroy();
 	}
 
-	update(dt) {
+	update(dt) { // eslint-disable-line no-unused-vars
 	}
 
 	draw(ctx) {
@@ -50,7 +50,7 @@ class RoomGamestate extends Gamestate {
 		const pl = this.room.player_list.length;
 		for(let i = 1; i < pl; i++) {
 			let j = (m_i + i) % pl;
-			CardDrawer.draw_hand_horizontal(ctx, this.room.player_list[j].hand, (i - 1) * (RU.W / (pl - 1)), 10, RU.W / (pl - 1), RU.H * .2, true, this.room.turn_i === j? "rgb(255, 0, 0)" : undefined);
+			CardDrawer.draw_hand_horizontal(ctx, this.room.player_list[j].hand, (i - 1) * (RU.W * .9 / (pl - 1)) + i * (RU.W * .1 / pl), 10, RU.W * .9 / (pl - 1), RU.H * .2, true, this.room.turn_i === j? "rgb(255, 0, 0)" : undefined);
 		}
 
 		CardDrawer.draw_played_cards(ctx, this.room.played_cards, RU.W / 4, RU.H * .3, RU.W / 2, RU.H * .3, this.room.seed);

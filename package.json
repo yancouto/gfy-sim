@@ -17,7 +17,7 @@
 	"scripts": {
 		"start": "node src/server/server_main.js",
 		"build": "webpack",
-		"lint": "eslint src/*/*.js"
+		"lint": "eslint src/*/*.js src/*/*/*.js"
 	},
 	"repository": {
 		"type": "git",

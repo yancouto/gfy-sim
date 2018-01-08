@@ -1,3 +1,5 @@
+"use strict";
+
 const Client = require("../server/Client");
 const RoomMenu = require("../server/RoomMenu").RM;
 
@@ -28,7 +30,10 @@ class ClientManager {
 	}
 
 	upd_client(client) {
-		RoomMenu.update_client(client);
+		if(client.wait_room)
+			client.socket.emit("update", client.wait_room.get_data(client));
+		else
+			RoomMenu.update_client(client);
 	}
 
 	change_room(client, new_room) {
@@ -45,12 +50,12 @@ class ClientManager {
 
 	i_will_start(client) {
 		if(!client.wait_room) return;
-		client.wait_room.i_will_start(client.id);
+		client.wait_room.i_will_start(client);
 	}
 
 	i_am_ready(client) {
 		if(!client.wait_room) return;
-		client.wait_room.i_am_ready(client.id);
+		client.wait_room.i_am_ready(client);
 	}
 }
 

@@ -13,7 +13,7 @@ class RoomMenu {
 	update_client(client) {
 		let data;
 		if(client.wait_room !== null) {
-			data = client.wait_room.get_data(client.id);
+			data = client.wait_room.get_data(client.id); // shouldn't happen
 		} else if(client.game !== null) {
 			data = {
 				room: client.game.room,
@@ -21,7 +21,7 @@ class RoomMenu {
 			};
 		} else
 			data = {
-				room_list: Array.from(this.game_list, (r) => r.room.name),
+				room_list: Array.from(this.game_list, r => r.room.name).concat(Array.from(this.wait_rooms, w => w.name)),
 				name: "RoomMenu"
 			};
 		client.socket.emit("update", data);
@@ -42,23 +42,28 @@ class RoomMenu {
 		if(client.game) {
 			console.log("Exiting game room " + client.game.room.name);
 			client.game.rem_player(client.id);
+			if(client.game.player_list.length === 0)
+				this.game_list.filter(w => w !== client.game);
 			client.game = null;
 		} else if(client.wait_room) {
 			console.log("Exiting wait room " + client.wait_room.name);
-			client.wait_room.rem_player(client.id);
+			client.wait_room.rem_player(client);
+			if(client.wait_room.player_list.length === 0)
+				this.wait_rooms.filter(w => w !== client.wait_room);
 			client.wait_room = null;
-
 		} else console.warn("quit_room on client without room");
 	}
 
 	change_to_room(client, room_name) {
 		console.log("Switching to room " + room_name);
 		let game = this.get_game(room_name);
-		game.add_player(client.id);
-		if(game instanceof GameLogic)
+		if(game instanceof GameLogic) {
 			client.game = game;
-		else
+			game.add_player(client.id);
+		} else {
 			client.wait_room = game;
+			game.add_player(client);
+		}
 	}
 }
 

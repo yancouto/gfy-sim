@@ -4,6 +4,7 @@ const Gamestate = require("./Gamestate");
 const GamestateManager = require("./GamestateManager").GM;
 const RU = require("../../client/RenderUtils");
 const Utils = require("../../common/Utils");
+const Room = require("./RoomGamestate");
 
 class WaitRoom extends Gamestate {
 	constructor() {

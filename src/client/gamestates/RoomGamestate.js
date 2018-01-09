@@ -7,6 +7,8 @@ const Room = require("../../common/Room");
 const CardDrawer = require("../../client/CardDrawer");
 const RoomInputHandler = require("./RoomInputHandler");
 
+const StickerPanel = require("../../client/drawables/StickerPanel");
+
 class RoomGamestate extends Gamestate {
 
 	constructor() {
@@ -14,6 +16,9 @@ class RoomGamestate extends Gamestate {
 		this.name = "Room";
 		this.background = new Image();
 		this.background.src = "assets/felt.jpg";
+
+		this.sticker_panel = new StickerPanel();
+
 	}
 
 	enter() {
@@ -27,6 +32,7 @@ class RoomGamestate extends Gamestate {
 	}
 
 	update(dt) { // eslint-disable-line no-unused-vars
+		this.sticker_panel.update(dt);
 	}
 
 	draw(ctx) {
@@ -53,9 +59,11 @@ class RoomGamestate extends Gamestate {
 			CardDrawer.draw_hand_horizontal(ctx, this.room.player_list[j].hand, (i - 1) * (RU.W * .9 / (pl - 1)) + i * (RU.W * .1 / pl), 10, RU.W * .9 / (pl - 1), RU.H * .2, true, this.room.turn_i === j? "rgb(255, 0, 0)" : undefined);
 		}
 
-		CardDrawer.draw_played_cards(ctx, this.room.played_cards, RU.W / 4, RU.H * .3, RU.W / 2, RU.H * .3, this.room.seed);
+		CardDrawer.draw_played_cards(ctx, this.room.played_cards, RU.W * .35, RU.H * .3, RU.W * .3, RU.H * .3, this.room.seed);
 
 		CardDrawer.draw_stack(ctx, RU.W * .8, RU.H * .3, RU.W * .15, RU.H * .3);
+
+		this.sticker_panel.draw(ctx, 10, RU.H * .3, RU.W * .3 - 20, RU.H * .3);
 	}
 
 	sync_to_server(data) {

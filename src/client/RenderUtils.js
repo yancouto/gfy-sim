@@ -5,6 +5,8 @@ const RU = module.exports = {};
 RU.W = 300;
 RU.H = 300;
 
+RU.CANVAS_BORDER = 10;
+
 function update_dimensions() {
 	RU.W = document.documentElement.clientWidth - 20;
 	RU.H = document.documentElement.clientHeight - 20;

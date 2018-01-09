@@ -2,6 +2,7 @@
 
 const GamestateManager = require("./GamestateManager").GM;
 const CardDrawer = require("../../client/CardDrawer");
+const RU = require("../../client/RenderUtils");
 
 class RoomPCControls {
 	constructor(input_handler) {
@@ -12,11 +13,21 @@ class RoomPCControls {
 	}
 
 	on_mouse_down(ev) {
+		// This conversion from world coords should be better
+		let x = ev.x - RU.CANVAS_BORDER;
+		let y = ev.y - RU.CANVAS_BORDER;
 		let gs = GamestateManager.current_gamestate;
 		if(!gs.room) return;
-		var index = CardDrawer.get_clicked_card(ev.x, ev.y);
-		if(index == -1) return;
-		this.input_handler.play_card(index);
+		var index = CardDrawer.get_clicked_card(x, y);
+		if(index !== -1) {
+			this.input_handler.play_card(index);
+			return;
+		}
+		index = gs.sticker_panel.get_clicked_sticker(x, y);
+		if(index !== -1) {
+			this.input_handler.send_sticker(index);
+			return;
+		}
 	}
 
 	destroy() {

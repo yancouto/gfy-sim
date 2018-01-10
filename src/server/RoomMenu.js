@@ -15,10 +15,7 @@ class RoomMenu {
 		if(client.wait_room !== null) {
 			data = client.wait_room.get_data(client.id); // shouldn't happen
 		} else if(client.game !== null) {
-			data = {
-				room: client.game.room,
-				name: "Room"
-			};
+			data = client.game.get_data(client.id);
 		} else
 			data = {
 				room_list: Array.from(this.game_list, r => r.room.name).concat(Array.from(this.wait_rooms, w => w.name)),

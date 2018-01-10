@@ -18,7 +18,6 @@ class RoomGamestate extends Gamestate {
 		this.background.src = "assets/felt.jpg";
 
 		this.sticker_panel = new StickerPanel();
-
 	}
 
 	enter() {
@@ -48,7 +47,7 @@ class RoomGamestate extends Gamestate {
 
 		ctx.fillStyle = "rgb(255, 255, 255)";
 		RU.set_font(12);
-		RU.draw_text_align("Room Code: " + this.room.name, RU.W - 10, RU.H - 10, RU.ALIGN_RIGHT, RU.ALIGN_BOTTOM);
+		RU.draw_text_align("Room Code: " + this.room.name, RU.W - 10, RU.H * .65, RU.ALIGN_RIGHT, RU.ALIGN_CENTER);
 
 		ctx.fillStyle = "rgb(0, 0, 0)";
 		CardDrawer.draw_hand_horizontal(ctx, this.me.hand, RU.W * .1, RU.H * .7, RU.W * .8, RU.H * .3 - 10, false, this.room.turn_i === m_i? "rgb(255, 0, 0)" : undefined);
@@ -69,6 +68,8 @@ class RoomGamestate extends Gamestate {
 	sync_to_server(data) {
 		this.room = Object.setPrototypeOf(data.room, Room);
 		this.me = this.room.player_list.find((p) => p.pid == Utils.client_socket.id);
+		for(let e of data.new_events)
+			console.log(e);
 	}
 }
 

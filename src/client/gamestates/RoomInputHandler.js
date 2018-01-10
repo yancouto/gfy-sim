@@ -18,8 +18,9 @@ class RoomInputHandler {
 		Utils.client_socket.emit("play card", index);
 	}
 
-	send_sticker(index) {
-		console.log("Sending sticker " + index);
+	send_sticker(name) {
+		console.log("Sending sticker " + name);
+		Utils.client_socket.emit("send sticker", name);
 	}
 
 	destroy() {

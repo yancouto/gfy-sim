@@ -2,6 +2,9 @@
 "use strict";
 
 const Room = require("../common/Room");
+const Event = require("../common/Event");
+
+const now = require("performance-now");
 
 const INITIAL_HAND_SIZE = 7;
 
@@ -13,6 +16,7 @@ class GameLogic {
 		this.effect = {};
 		for(let c of "A23456789TJQK")
 			this.effect[c] = c;
+		this.event_list = [];
 	}
 
 	add_player(pid) {
@@ -31,6 +35,20 @@ class GameLogic {
 			this.room.turn_i = null;
 		else if(this.room.turn_i === i)
 			this.room.turn_i = (this.room.turn_i + 1) % this.room.player_list.length;
+	}
+
+	get_data(pid) {
+		let pi = this.room.player_list.find(p => p.pid === pid);
+		let new_events = [];
+		for(let i = this.event_list.length - 1; i >= 0 && this.event_list[i].timestamp >= pi.last_timestamp; i--)
+			new_events.push(this.event_list[i]);
+		new_events.reverse();
+		pi.last_timestamp = now();
+		return {
+			room: this.room,
+			new_events,
+			name: "Room"
+		};
 	}
 
 	do_play(i, card) {
@@ -102,6 +120,11 @@ class GameLogic {
 		}
 		while(r.played_cards.length > 10)
 			r.remove_last_card_from_played();
+	}
+
+	send_sticker(pid, name) {
+		console.log(pid + " sent sticker " + name);
+		this.event_list.push(new Event(pid, Event.SENT_STICKER, {name}));
 	}
 
 	get_next_card() {

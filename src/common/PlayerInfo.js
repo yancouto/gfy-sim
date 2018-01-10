@@ -1,6 +1,8 @@
 // Stores hand and other necessary info
 "use strict";
 
+const now = require("performance-now");
+
 const value = {};
 for(let i = 0; i < 13; i++)
 	value["23456789TJQKA"[i]] = i;
@@ -12,6 +14,7 @@ class PlayerInfo {
 	constructor(pid) {
 		this.pid = pid;
 		this.hand = [];
+		this.last_timestamp = now();
 	}
 
 	sort_hand() {

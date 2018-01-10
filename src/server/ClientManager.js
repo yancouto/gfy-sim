@@ -18,6 +18,7 @@ class ClientManager {
 		socket.on("request update", () => self.upd_client(c));
 		socket.on("change room", (to) => self.change_room(c, to));
 		socket.on("play card", (index) => self.play_card(c, index));
+		socket.on("send sticker", (name) => self.send_sticker(c, name));
 		socket.on("i will start", () => self.i_will_start(c));
 		socket.on("i am ready", () => self.i_am_ready(c));
 	}
@@ -46,6 +47,11 @@ class ClientManager {
 	play_card(client, index) {
 		if(!client.on_game) return;
 		client.game.play_card(client.id, index);
+	}
+
+	send_sticker(client, name) {
+		if(!client.on_game) return;
+		client.game.send_sticker(client.id, name);
 	}
 
 	i_will_start(client) {

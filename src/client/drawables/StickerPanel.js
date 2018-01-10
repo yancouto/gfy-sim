@@ -10,8 +10,11 @@ class StickerPanel extends Drawable {
 		this.stickers = [];
 		let img = new Image();
 		img.src = "assets/card_back.png";
-		for(let i = 0; i < 18; i++)
-			this.stickers.push(new Sticker(img));
+		for(let i = 0; i < 18; i++) {
+			let s = new Sticker(img);
+			s.name = "oi";
+			this.stickers.push(s);
+		}
 		this.last_size = 10;
 	}
 
@@ -48,7 +51,9 @@ class StickerPanel extends Drawable {
 
 	get_clicked_sticker(x, y) {
 		// Do this using division and part of the code in draw, if efficiency is needed. It is probably not.
-		return this.stickers.findIndex(s => s.is_inside(x, y));
+		let s = this.stickers.find(s => s.is_inside(x, y));
+		if(s) return s.name;
+		return undefined;
 	}
 }
 

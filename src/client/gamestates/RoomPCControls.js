@@ -23,9 +23,9 @@ class RoomPCControls {
 			this.input_handler.play_card(index);
 			return;
 		}
-		index = gs.sticker_panel.get_clicked_sticker(x, y);
-		if(index !== -1) {
-			this.input_handler.send_sticker(index);
+		let name = gs.sticker_panel.get_clicked_sticker(x, y);
+		if(name) {
+			this.input_handler.send_sticker(name);
 			return;
 		}
 	}

@@ -10,9 +10,11 @@ const RoomInputHandler = require("./RoomInputHandler");
 const Event = require("../../common/Event");
 
 const CenteredImage = require("../../client/drawables/CenteredImage");
+const CenteredText = require("../../client/drawables/CenteredText");
 const DisappearingDrawable = require("../../client/drawables/DisappearingDrawable");
 
 const StickerPanel = require("../../client/drawables/StickerPanel");
+const StickerList = require("../../client/drawables/StickerList");
 
 class RoomGamestate extends Gamestate {
 
@@ -43,6 +45,8 @@ class RoomGamestate extends Gamestate {
 				d.dy = Math.min(1, d.dy + dt * .5);
 				d.update(dt);
 			}
+		for(let s in this.drawables)
+			this.drawables[s] = this.drawables[s].filter(d => !d.can_delete);
 	}
 
 	draw(ctx) {
@@ -59,9 +63,6 @@ class RoomGamestate extends Gamestate {
 		ctx.fillStyle = "rgb(255, 255, 255)";
 		RU.set_font(12);
 		RU.draw_text_align("Room Code: " + this.room.name, RU.W - 10, RU.H * .65, RU.ALIGN_RIGHT, RU.ALIGN_CENTER);
-
-		ctx.fillStyle = "rgb(0, 0, 0)";
-		CardDrawer.draw_hand_horizontal(ctx, this.me.hand, RU.W * .1, RU.H * .7, RU.W * .8, RU.H * .3 - 10, false, this.room.turn_i === m_i? "rgb(255, 0, 0)" : undefined);
 
 		const pl = this.room.player_list.length;
 		for(let i = 1; i < pl; i++) {
@@ -82,14 +83,26 @@ class RoomGamestate extends Gamestate {
 				}
 		}
 
+		ctx.fillStyle = "rgb(0, 0, 0)";
+		CardDrawer.draw_hand_horizontal(ctx, this.me.hand, RU.W * .1, RU.H * .7, RU.W * .8, RU.H * .3 - 10, false, this.room.turn_i === m_i? "rgb(255, 0, 0)" : undefined);
+
 		CardDrawer.draw_played_cards(ctx, this.room.played_cards, RU.W * .35, RU.H * .3, RU.W * .3, RU.H * .3, this.room.seed);
 
 		CardDrawer.draw_stack(ctx, RU.W * .8, RU.H * .3, RU.W * .15, RU.H * .3);
 
+
 		this.sticker_panel.draw(ctx, 10, RU.H * .3, RU.W * .3 - 20, RU.H * .3);
 
-		for(let s in this.drawables)
-			this.drawables[s] = this.drawables[s].filter(d => !d.can_delete);
+		if(this.drawables[this.me.pid]) {
+			const [x, y] = [RU.W * .3, RU.H * .3];
+			const [w, h] = [RU.W * .5, RU.H * .3];
+			for(let k in this.drawables[this.me.pid]) {
+				const d = this.drawables[this.me.pid][k];
+				d.drawable.sz = Math.min(w, h) / 3;
+				d.draw(ctx, x + w * d.dx, y + (1 / 6 + (4 / 6) * (1 - d.dy)) * h);
+			}
+		}
+
 	}
 	
 	add_drawable(pid, d) {
@@ -101,9 +114,13 @@ class RoomGamestate extends Gamestate {
 	}
 
 	process_event(ev) {
+		console.log("Got event " + ev.type + " from " + ev.source);
 		if(ev.type === Event.SENT_STICKER) {
-			let s = new CenteredImage("assets/card_back.png", 50);
-			this.add_drawable(ev.source, new DisappearingDrawable(s, [255, 0, 0], 2));
+			let s = new CenteredImage(StickerList[ev.info.name], 50);
+			this.add_drawable(ev.source, new DisappearingDrawable(s, [0, 0, 0], 2));
+		} else if(ev.type === Event.GFY) {
+			let s = new CenteredText("Draw 2");
+			this.add_drawable(ev.source, new DisappearingDrawable(s, [0, 0, 0], 2));
 		}
 	}
 

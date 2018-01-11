@@ -117,6 +117,8 @@ class GameLogic {
 			r.turn_i = this.clamp_to_players(r.turn_i + r.dir * (this.effect[c[0]] == "A"? 2 : 1));
 		} else {
 			pi.add_to_hand(this.get_next_card(), this.get_next_card());
+			this.event_list.push(new Event(pid, Event.GFY));
+
 		}
 		while(r.played_cards.length > 10)
 			r.remove_last_card_from_played();

@@ -2,17 +2,16 @@
 "use strict";
 
 const Drawable = require("./Drawable");
-const Sticker = require("./ImageButton");
+const Sticker = require("./ClickableSticker");
+
+const StickerList = require("./StickerList");
 
 class StickerPanel extends Drawable {
 	constructor() {
 		super();
 		this.stickers = [];
-		let img = new Image();
-		img.src = "assets/card_back.png";
-		for(let i = 0; i < 18; i++) {
-			let s = new Sticker(img);
-			s.name = "oi";
+		for(let name in StickerList) {
+			let s = new Sticker(name);
 			this.stickers.push(s);
 		}
 		this.last_size = 10;

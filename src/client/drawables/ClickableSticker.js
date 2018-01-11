@@ -3,16 +3,14 @@
 
 const Drawable = require("./Drawable");
 const Util = require("../../common/Utils");
+const StickerList = require("./StickerList");
 
-class ImageButton extends Drawable {
-	constructor(img) {
+class ClickableSticker extends Drawable {
+	constructor(name) {
 		super();
-		if(img instanceof Image)
-			this.img = img;
-		else {
-			this.img = new Image();
-			this.img.src = img;
-		}
+		this.img = StickerList[name];
+		console.assert(this.img instanceof Image);
+		this.name = name;
 		[this.x, this.y, this.w, this.h] = [0, 0, 0, 0];
 	}
 
@@ -27,4 +25,4 @@ class ImageButton extends Drawable {
 	}
 }
 
-module.exports = ImageButton;
+module.exports = ClickableSticker;

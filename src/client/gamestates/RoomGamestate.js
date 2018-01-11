@@ -9,7 +9,7 @@ const RoomInputHandler = require("./RoomInputHandler");
 
 const Event = require("../../common/Event");
 
-const Text = require("../../client/drawables/Text");
+const CenteredImage = require("../../client/drawables/CenteredImage");
 const DisappearingDrawable = require("../../client/drawables/DisappearingDrawable");
 
 const StickerPanel = require("../../client/drawables/StickerPanel");
@@ -39,8 +39,10 @@ class RoomGamestate extends Gamestate {
 	update(dt) { // eslint-disable-line no-unused-vars
 		this.sticker_panel.update(dt);
 		for(let pid in this.drawables)
-			for(let d of this.drawables[pid])
+			for(let d of this.drawables[pid]) {
+				d.dy = Math.min(1, d.dy + dt * .5);
 				d.update(dt);
+			}
 	}
 
 	draw(ctx) {
@@ -72,12 +74,12 @@ class RoomGamestate extends Gamestate {
 
 			CardDrawer.draw_hand_horizontal(ctx, pi.hand, x, y, w, h, true, this.room.turn_i === j? "rgb(255, 0, 0)" : undefined);
 
-			if(this.drawables[pi.pid]) {
-				const ds = this.drawables[pi.pid].length;
+			if(this.drawables[pi.pid])
 				for(let k in this.drawables[pi.pid]) {
-					this.drawables[pi.pid][k].draw(ctx, x + w / 2, y + (parseInt(k, 10) + 1) * (h / (ds + 1)));
+					const d = this.drawables[pi.pid][k];
+					d.drawable.sz = Math.min(w, h) / 3;
+					d.draw(ctx, x + w * d.dx, y + (1 / 6 + (4 / 6) * (1 - d.dy)) * h);
 				}
-			}
 		}
 
 		CardDrawer.draw_played_cards(ctx, this.room.played_cards, RU.W * .35, RU.H * .3, RU.W * .3, RU.H * .3, this.room.seed);
@@ -93,13 +95,15 @@ class RoomGamestate extends Gamestate {
 	add_drawable(pid, d) {
 		if(!this.drawables[pid])
 			this.drawables[pid] = [];
+		d.dy = 0;
+		d.dx = Math.random() / 3 + (1 / 3);
 		this.drawables[pid].push(d);
 	}
 
 	process_event(ev) {
 		if(ev.type === Event.SENT_STICKER) {
-			let t = new Text("Sticker " + ev.source, "24px serif");
-			this.add_drawable(ev.source, new DisappearingDrawable(t, [255, 0, 0], 8));
+			let s = new CenteredImage("assets/card_back.png", 50);
+			this.add_drawable(ev.source, new DisappearingDrawable(s, [255, 0, 0], 2));
 		}
 	}
 

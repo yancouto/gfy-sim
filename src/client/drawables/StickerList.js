@@ -2,11 +2,19 @@
 
 const list = module.exports = {};
 
-// TODO follow this format and add all stickers
-list.oi = "assets/card_back.png";
+// TODO Add images for all stickers
 
-for(let i = 1; i <= 10; i++)
-	list["oi" + i] = "assets/card_back.png";
+// Suits
+for(const suit of "CDSH")
+	list[suit] = "assets/card_back.png";
+
+// Cards
+for(const card of "23456789TJQKA")
+	list[card] = "assets/card_back.png";
+
+// Extra
+list.oi = "assets/card_back.png";
+list.tchau = "assets/card_back.png";
 
 // Creating Images for the stickers
 for(let name in list) {

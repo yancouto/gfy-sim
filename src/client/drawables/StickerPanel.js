@@ -4,14 +4,16 @@
 const Drawable = require("./Drawable");
 const Sticker = require("./ClickableSticker");
 
-const StickerList = require("./StickerList");
-
 class StickerPanel extends Drawable {
 	constructor() {
 		super();
 		this.stickers = [];
-		for(let name in StickerList) {
-			let s = new Sticker(name);
+		for(const name of "CDSH23456789TJQKA") {
+			const s = new Sticker(name);
+			this.stickers.push(s);
+		}
+		for(const name of ["oi", "tchau"]) {
+			const s = new Sticker(name);
 			this.stickers.push(s);
 		}
 		this.last_size = 10;

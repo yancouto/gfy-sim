@@ -25,7 +25,7 @@ class ClientManager {
 
 	rem_client(client) {
 		console.log("client disconnected " + client.socket.id);
-		if(client.on_game)
+		if(client.on_room)
 			RoomMenu.quit_room(client);
 		this.id_to_client.delete(client.socket.id);
 	}

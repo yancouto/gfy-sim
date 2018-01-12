@@ -39,14 +39,12 @@ class RoomMenu {
 		if(client.game) {
 			console.log("Exiting game room " + client.game.room.name);
 			client.game.rem_player(client.id);
-			if(client.game.room.player_list.length === 0)
-				this.game_list = this.game_list.filter(w => w !== client.game);
+			this.game_list = this.game_list.filter(w => w.room.player_list.length > 0);
 			client.game = null;
 		} else if(client.wait_room) {
 			console.log("Exiting wait room " + client.wait_room.name);
 			client.wait_room.rem_player(client);
-			if(client.wait_room.player_list.length === 0)
-				this.wait_rooms = this.wait_rooms.filter(w => w !== client.wait_room);
+			this.wait_rooms = this.wait_rooms.filter(w => w.player_list.length > 0);
 			client.wait_room = null;
 		} else console.warn("quit_room on client without room");
 	}

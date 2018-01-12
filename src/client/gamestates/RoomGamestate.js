@@ -115,13 +115,26 @@ class RoomGamestate extends Gamestate {
 
 	process_event(ev) {
 		console.log("Got event " + ev.type + " from " + ev.source);
+		let drawable = null;
+		let color = [0, 0, 0];
+		let timeout = 2;
+		let add_drawable = true;
 		if(ev.type === Event.SENT_STICKER) {
-			let s = new CenteredImage(StickerList[ev.info.name], 50);
-			this.add_drawable(ev.source, new DisappearingDrawable(s, [0, 0, 0], 2));
-		} else if(ev.type === Event.GFY) {
-			let s = new CenteredText("Draw 2");
-			this.add_drawable(ev.source, new DisappearingDrawable(s, [0, 0, 0], 2));
-		}
+			drawable = new CenteredImage(StickerList[ev.info.name], 50);
+		} else if(ev.type === Event.DRAW) {
+			let text;
+			if(ev.info.reason === "4")
+				text = "Broke Silence Rule (+" + ev.info.draw_count + ")";
+			else
+				text = "Draw " + ev.info.draw_count;
+			drawable = new CenteredText(text);
+		} else if(ev.type === Event.EFF_7) {
+			drawable = new CenteredText("+" + ev.info.draw_count);
+		} else
+			add_drawable = false;
+
+		if(add_drawable)
+			this.add_drawable(ev.source, new DisappearingDrawable(drawable, color, timeout));
 	}
 
 	sync_to_server(data) {

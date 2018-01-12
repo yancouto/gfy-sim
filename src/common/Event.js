@@ -13,9 +13,8 @@ class Event {
 
 Object.assign(Event, {
 	SENT_STICKER: 0, // Player sent sticker
-	GFY: 1, // Player drawed 2 because made a mistake
-	DRAW_7: 2, // Player drawed because of 7
-	DRAW_9: 3, // Player drawed because of 9
+	DRAW: 1, // Player drawed some cards for any reason
+	EFF_7: 2, // Player will draw unless he/she plays a 7
 });
 
 module.exports = Event;

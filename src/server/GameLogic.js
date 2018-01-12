@@ -87,9 +87,9 @@ class GameLogic {
 
 	play_card(pid, index) {
 		const r = this.room;
-		let i = r.player_list.findIndex(p => p.pid === pid);
-		let pi = r.player_list[i];
-		let c = pi.hand[index];
+		const i = r.player_list.findIndex(p => p.pid === pid);
+		const pi = r.player_list[i];
+		const c = pi.hand[index];
 		if(this.do_play(i, c)) {
 			pi.hand = pi.hand.filter((c, id) => id != index);
 			r.played_cards.push(c);
@@ -97,17 +97,18 @@ class GameLogic {
 			// Queen --- reverses order
 			if(this.effect[c[0]] === "Q") r.dir = -r.dir;
 			// 9 --- previous player draws one, does not stack
-			if(this.effect[c[0]] === "9")
-				r.player_list[this.clamp_to_players(r.turn_i - r.dir)].add_to_hand(this.get_next_card());
+			if(this.effect[c[0]] === "9") {
+				const prev = r.player_list[this.clamp_to_players(r.turn_i - r.dir)];
+				this.player_draws(prev, 1, "9");
+			}
 			// 4 --- silence rule
 			if(this.effect[c[0]] === "4")
 				r.silent = !r.silent;
 			// 7 --- next player draws two, stacks
 			if(this.effect[c[0]] === "7")
 				r.must_draw = r.must_draw + 2;
-			else {
-				for(let j = 0; j < r.must_draw; j++)
-					pi.add_to_hand(this.get_next_card());
+			else if(r.must_draw > 0) {
+				this.player_draws(pi, r.must_draw, "7");
 				r.must_draw = 0;
 			}
 			r.current_suit = null;
@@ -115,10 +116,11 @@ class GameLogic {
 			this.can_change_suit = (this.effect[c[0]] === "8");
 
 			r.turn_i = this.clamp_to_players(r.turn_i + r.dir * (this.effect[c[0]] == "A"? 2 : 1));
-		} else {
-			pi.add_to_hand(this.get_next_card(), this.get_next_card());
-			this.event_list.push(new Event(pid, Event.GFY));
 
+			if(r.must_draw > 0)
+				this.event_list.push(new Event(r.player_list[r.turn_i].pid, Event.EFF_7, {draw_count: r.must_draw}));
+		} else {
+			this.player_draws(pi, 2, "GFY");
 		}
 		while(r.played_cards.length > 10)
 			r.remove_last_card_from_played();
@@ -127,12 +129,23 @@ class GameLogic {
 	send_sticker(pid, name) {
 		console.log(pid + " sent sticker " + name);
 		this.event_list.push(new Event(pid, Event.SENT_STICKER, {name}));
+
+		if(this.room.silent) {
+			this.room.silent = false;
+			this.player_draws(this.room.player_list.find(p => p.pid === pid), 4, "4");
+		}
 	}
 
 	get_next_card() {
 		// For now, assume the deck is infinite
 		return "A23456789TJQK"[Math.floor(Math.random() * 13)]
 		         + "CDHS"[Math.floor(Math.random() * 4)];
+	}
+
+	player_draws(pi, draw_count, reason) {
+		for(let i = 0; i < draw_count; i++)
+			pi.add_to_hand(this.get_next_card());
+		this.event_list.push(new Event(pi.pid, Event.DRAW, {draw_count, reason}));
 	}
 }
 

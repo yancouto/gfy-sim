@@ -118,7 +118,6 @@ class RoomGamestate extends Gamestate {
 		let drawable = null;
 		let color = [0, 0, 0];
 		let timeout = 2;
-		let add_drawable = true;
 		if(ev.type === Event.SENT_STICKER) {
 			drawable = new CenteredImage(StickerList[ev.info.name], 50);
 		} else if(ev.type === Event.DRAW) {
@@ -130,10 +129,13 @@ class RoomGamestate extends Gamestate {
 			drawable = new CenteredText(text);
 		} else if(ev.type === Event.EFF_7) {
 			drawable = new CenteredText("+" + ev.info.draw_count);
-		} else
-			add_drawable = false;
+		} else if(ev.type === Event.EFF_J) {
+			drawable = new CenteredText("Swapped " + ev.info.card_a + " and " + ev.info.card_b);
+		} else if(ev.type === Event.EFF_8) {
+			drawable = new CenteredText("Changed suit to " + ev.info.new_suit);
+		}
 
-		if(add_drawable)
+		if(drawable)
 			this.add_drawable(ev.source, new DisappearingDrawable(drawable, color, timeout));
 	}
 

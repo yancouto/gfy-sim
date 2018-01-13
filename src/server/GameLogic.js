@@ -12,9 +12,13 @@ class GameLogic {
 	constructor(room_name) {
 		this.room = new Room(room_name);
 		this.room.played_cards.push(this.get_next_card());
+		/* Is true while you can change the suit by sending a sticker,
+		   that is, right after playing an 8 */
 		this.can_change_suit = false; // used for 8
+		this.can_swap_rules = false; // used for J
+		this.first_card_to_swap = null; // used for J
 		this.effect = {};
-		for(let c of "A23456789TJQK")
+		for(let c of "23456789TJQKA")
 			this.effect[c] = c;
 		this.event_list = [];
 	}
@@ -64,12 +68,13 @@ class GameLogic {
 			return true;
 		}
 		// 10 rule
-		if(nxt !== null && !["T", "J", "Q", "K"].find(c => (c == top[0] || c == nxt[0]))) {
+		if(this.effect[card[0]] === "T" && nxt !== null) {
 			let sum = 0;
 			for(let c of (top[0] + nxt[0])) {
 				if(c === "5" && this.effect["5"] !== "5") sum = 1000;
 				if(this.effect[c] === "5") sum += 5;
-				else sum += parseInt(c.replace("A", "1"), 10);
+				else // parseInt will return NaN on non-number, and work
+					sum += parseInt(c.replace("A", "1"), 10);
 			}
 			if(sum == 10) {
 				r.turn_i = i;
@@ -113,7 +118,17 @@ class GameLogic {
 			}
 			r.current_suit = null;
 			// 8 --- can change suit
-			this.can_change_suit = (this.effect[c[0]] === "8");
+			this.can_change_suit = (this.effect[c[0]] === "8"? pi.pid : false);
+
+			// J --- can swap rules
+			if(this.effect[c[0]] === "J") {
+				// reset swap rules
+				for(let c of "23456789TJQKA")
+					this.effect[c] = c;
+				this.can_swap_rules = pi.pid;
+				this.first_card_to_swap = null;
+			} else
+				this.can_swap_rules = false;
 
 			r.turn_i = this.clamp_to_players(r.turn_i + r.dir * (this.effect[c[0]] == "A"? 2 : 1));
 
@@ -133,6 +148,25 @@ class GameLogic {
 		if(this.room.silent) {
 			this.room.silent = false;
 			this.player_draws(this.room.player_list.find(p => p.pid === pid), 4, "4");
+		}
+
+		// changing the suit -- 8 RULE
+		if(this.can_change_suit === pid && "CDHS".includes(name)) {
+			this.room.current_suit = name;
+			this.can_change_suit = false;
+			this.event_list.push(new Event(pid, Event.EFF_8, {new_suit: name}));
+		}
+
+		// swaping rules -- J RULE
+		if(this.can_swap_rules === pid && "23456789TJQKA".includes(name)) {
+			if(!this.first_card_to_swap) {
+				this.first_card_to_swap = name;
+			} else {
+				const [card_a, card_b] = [this.first_card_to_swap, name];
+				this.effect[card_a] = card_b;
+				this.effect[card_b] = card_a;
+				this.event_list.push(new Event(pid, Event.EFF_J, {card_a, card_b}));
+			}
 		}
 	}
 

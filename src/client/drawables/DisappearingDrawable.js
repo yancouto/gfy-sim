@@ -26,7 +26,9 @@ class DisappearingDrawable extends Drawable {
 		// Assumes it is filled
 		const [r, g, b] = this.color;
 		ctx.fillStyle = "rgba(" + r + "," + g + "," + b + "," + Math.floor(this.a) + ")";
+		ctx.globalAlpha = (this.a / 255);
 		this.drawable.draw(ctx, x, y, w, h);
+		ctx.globalAlpha = 1;
 	}
 }
 

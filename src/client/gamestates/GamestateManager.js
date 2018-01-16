@@ -20,7 +20,9 @@ class GamestateManager {
 		if(this.cur_gs !== null) {
 			this.cur_gs.update(dt);
 			RenderUtils.ctx.clearRect(0, 0, RenderUtils.W, RenderUtils.H);
+			RenderUtils.ctx.save();
 			this.cur_gs.draw(RenderUtils.ctx);
+			RenderUtils.ctx.restore();
 		}
 	}
 

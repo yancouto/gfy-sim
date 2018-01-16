@@ -12,7 +12,7 @@ class StickerPanel extends Drawable {
 			const s = new Sticker(name);
 			this.stickers.push(s);
 		}
-		for(const name of ["oi", "tchau"]) {
+		for(const name of ["laugh", "tongue"]) {
 			const s = new Sticker(name);
 			this.stickers.push(s);
 		}

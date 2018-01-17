@@ -105,10 +105,8 @@ class GameLogic {
 			// 7 --- next player draws two, stacks
 			if(this.effect[c[0]] === "7")
 				r.must_draw = r.must_draw + 2;
-			else if(r.must_draw > 0) {
-				this.player_draws(pi, r.must_draw, "7");
-				r.must_draw = 0;
-			}
+			else
+				this.flush_7();
 			r.current_suit = null;
 			// 8 --- can change suit
 			this.can_change_suit = (this.effect[c[0]] === "8"? pi.pid : false);
@@ -128,10 +126,20 @@ class GameLogic {
 			if(r.must_draw > 0)
 				this.event_list.push(new Event(r.player_list[r.turn_i].pid, Event.EFF_7, {draw_count: r.must_draw}));
 		} else {
+			if(this.turn_i === i)
+				this.flush_7();
 			this.player_draws(pi, 2, "GFY");
 		}
 		while(r.played_cards.length > 10)
 			r.remove_last_card_from_played();
+	}
+
+	flush_7() {
+		const pi = this.room.player_list[this.room.turn_i];
+		if(this.room.must_draw > 0) {
+			this.player_draws(pi, this.room.must_draw, "7");
+			this.room.must_draw = 0;
+		}
 	}
 
 	send_sticker(pid, name) {
@@ -170,15 +178,12 @@ class GameLogic {
 			this.player_draws(pi, 2, "GFY");
 			return;
 		}
+		this.flush_7();
 		for(const card of pi.hand)
 			if(this.can_play(i, card)) {
 				this.player_draws(pi, 2, "GFY");
 				return;
 			}
-		if(this.room.must_draw > 0) {
-			this.player_draws(pi, this.room.must_draw, "7");
-			this.must_draw = 0;
-		}
 		this.player_draws(pi, 1, "stack");
 		this.room.mixed_turn = true;
 	}

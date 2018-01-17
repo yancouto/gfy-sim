@@ -16,6 +16,15 @@ const DisappearingDrawable = require("../../client/drawables/DisappearingDrawabl
 const StickerPanel = require("../../client/drawables/StickerPanel");
 const StickerList = require("../../client/drawables/StickerList");
 
+function get_hand_color(room, turn) {
+	if(room.turn_i === turn)
+		return "rgb(255, 0, 0)";
+	else if(room.this_turn_or_mixed(turn)) // mixed turn
+		return "rgb(0, 255, 0)";
+	else
+		return "rgb(0, 0, 0)";
+}
+
 class RoomGamestate extends Gamestate {
 
 	constructor() {
@@ -49,6 +58,7 @@ class RoomGamestate extends Gamestate {
 			this.drawables[s] = this.drawables[s].filter(d => !d.can_delete);
 	}
 
+
 	draw(ctx) {
 		let sc = Math.min(3000 / RU.W, 2001 / RU.H);
 		ctx.drawImage(this.background, 0, 0, RU.W * sc, RU.H * sc, 0, 0, RU.W, RU.H);
@@ -73,7 +83,7 @@ class RoomGamestate extends Gamestate {
 			const w = RU.W * .9 / (pl - 1);
 			const h = RU.H * .2;
 
-			CardDrawer.draw_hand_horizontal(ctx, pi.hand, x, y, w, h, true, this.room.turn_i === j? "rgb(255, 0, 0)" : undefined);
+			CardDrawer.draw_hand_horizontal(ctx, pi.hand, x, y, w, h, true, get_hand_color(this.room, j));
 
 			if(this.drawables[pi.pid])
 				for(let k in this.drawables[pi.pid]) {
@@ -84,7 +94,7 @@ class RoomGamestate extends Gamestate {
 		}
 
 		ctx.fillStyle = "rgb(0, 0, 0)";
-		CardDrawer.draw_hand_horizontal(ctx, this.me.hand, RU.W * .1, RU.H * .7, RU.W * .8, RU.H * .3 - 10, false, this.room.turn_i === m_i? "rgb(255, 0, 0)" : undefined);
+		CardDrawer.draw_hand_horizontal(ctx, this.me.hand, RU.W * .1, RU.H * .7, RU.W * .8, RU.H * .3 - 10, false, get_hand_color(this.room, m_i));
 
 		CardDrawer.draw_played_cards(ctx, this.room.played_cards, RU.W * .35, RU.H * .3, RU.W * .3, RU.H * .3, this.room.seed);
 
@@ -124,6 +134,8 @@ class RoomGamestate extends Gamestate {
 			let text;
 			if(ev.info.reason === "4")
 				text = "Broke Silence Rule (+" + ev.info.draw_count + ")";
+			else if(ev.info.reason === "stack")
+				text = "Draw " + ev.info.draw_count + " from stack";
 			else
 				text = "Draw " + ev.info.draw_count;
 			drawable = new CenteredText(text);
@@ -140,7 +152,7 @@ class RoomGamestate extends Gamestate {
 	}
 
 	sync_to_server(data) {
-		this.room = Object.setPrototypeOf(data.room, Room);
+		this.room = Object.setPrototypeOf(data.room, Room.prototype);
 		this.me = this.room.player_list.find((p) => p.pid == Utils.client_socket.id);
 		for(let e of data.new_events)
 			this.process_event(e);

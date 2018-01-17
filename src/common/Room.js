@@ -15,9 +15,20 @@ class Room {
 		this.seed = 12;
 		this.silent = false; // used for 4
 		this.turn_i = null;
+		this.mixed_turn = false; // whether the turn is currently mixed
 		this.dir = +1;
 		this.must_draw = 0; // used for 7
 		this.current_suit = null; // used for 8
+	}
+
+	clamp_to_players(i) {
+		if(i < 0 || i >= this.player_list.length) i %= this.player_list.length;
+		if(i < 0) i += this.player_list.length;
+		return i;
+	}
+
+	this_turn_or_mixed(i) {
+		return this.turn_i === i || (this.mixed_turn && this.clamp_to_players(i - 1) === this.turn_i);
 	}
 
 	add_player(pid) {

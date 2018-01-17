@@ -28,13 +28,14 @@ CardDrawer.draw_card = function(ctx, card, x, y, w, h, hide, border_color) {
 };
 
 let last_draw = null;
+let stack_last_draw = null;
 
 CardDrawer.draw_hand_horizontal = function(ctx, hand, x, y, w, h, hide, border_color) {
 	const hl = hand.length;
 	if(!hide) {
-		last_draw = {
+		last_draw = [
 			x, y, w, h, hl
-		};
+		];
 	}
 	if(hl == 0) return;
 	let cw = w / Math.max(7, hl / 3);
@@ -52,7 +53,7 @@ CardDrawer.draw_hand_horizontal = function(ctx, hand, x, y, w, h, hide, border_c
 
 CardDrawer.get_clicked_card = function(xc, yc) {
 	if(!last_draw) return -1;
-	let {x, y, w, h, hl} = last_draw;
+	let [x, y, w, h, hl] = last_draw;
 	if(hl == 0) return -1;
 	let cw = w / Math.max(7, hl / 3);
 	let ch = h;
@@ -65,6 +66,10 @@ CardDrawer.get_clicked_card = function(xc, yc) {
 	for(let i = hl - 1; i >= 0; i--)
 		if(Utils.point_in_rect(xc, yc, x + ow + dw * i, y + ((h - ch) / 2), cw, ch))
 			return i;
+
+	[x, y, w, h] = stack_last_draw;
+	if(Utils.point_in_rect(xc, yc, x, y, w, h))
+		return -2;
 	return -1;
 };
 
@@ -103,4 +108,5 @@ CardDrawer.draw_stack = function(ctx, x, y, w, h) {
 	let oh = (h - dh * (n - 1) - ch) / 2;
 	for(let i = 0; i < n; i++)
 		CardDrawer.draw_card(ctx, "??", x + ow + dw * i, y + oh + dh * i, cw, ch, true);
+	stack_last_draw = [x + ow, y + oh, dw * (n - 1) + cw, dh * (n - 1) + ch];
 };

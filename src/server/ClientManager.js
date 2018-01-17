@@ -21,6 +21,7 @@ class ClientManager {
 		socket.on("send sticker", (name) => self.send_sticker(c, name));
 		socket.on("i will start", () => self.i_will_start(c));
 		socket.on("i am ready", () => self.i_am_ready(c));
+		socket.on("draw from stack", () => self.draw_from_stack(c));
 	}
 
 	rem_client(client) {
@@ -62,6 +63,11 @@ class ClientManager {
 	i_am_ready(client) {
 		if(!client.wait_room) return;
 		client.wait_room.i_am_ready(client);
+	}
+
+	draw_from_stack(client) {
+		if(!client.on_game) return;
+		client.game.draw_from_stack(client.id);
 	}
 }
 

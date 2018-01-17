@@ -55,18 +55,16 @@ class GameLogic {
 		};
 	}
 
-	do_play(i, card) {
+	can_play(i, card) {
 		const r = this.room;
 		let top = r.played_cards[r.played_cards.length - 1];
 		let nxt = r.played_cards.length > 1? r.played_cards[r.played_cards.length - 2] : null;
 		// normal play
-		if(r.turn_i === i && (card[0] === top[0] || card[1] === (r.current_suit || top[1])))
+		if(r.this_turn_or_mixed(i) && (card[0] === top[0] || card[1] === (r.current_suit || top[1])))
 			return true;
 		// provolone
-		if(this.effect[card[0]] !== "2" && card[0] === top[0] && card[1] === top[1]) {
-			r.turn_i = i;
+		if(this.effect[card[0]] !== "2" && card[0] === top[0] && card[1] === top[1])
 			return true;
-		}
 		// 10 rule
 		if(this.effect[card[0]] === "T" && nxt !== null) {
 			let sum = 0;
@@ -76,26 +74,21 @@ class GameLogic {
 				else // parseInt will return NaN on non-number, and work
 					sum += parseInt(c.replace("A", "1"), 10);
 			}
-			if(sum == 10) {
-				r.turn_i = i;
+			if(sum == 10)
 				return true;
-			}
 		}
 		return false;
 	}
 
-	clamp_to_players(i) {
-		if(i < 0 || i >= this.room.player_list.length) i %= this.room.player_list.length;
-		if(i < 0) i += this.room.player_list.length;
-		return i;
-	}
 
 	play_card(pid, index) {
 		const r = this.room;
 		const i = r.player_list.findIndex(p => p.pid === pid);
 		const pi = r.player_list[i];
 		const c = pi.hand[index];
-		if(this.do_play(i, c)) {
+		if(this.can_play(i, c)) {
+			r.mixed_turn = false;
+			r.turn_i = i; // becomes this players turn if it was not already
 			pi.hand = pi.hand.filter((c, id) => id != index);
 			r.played_cards.push(c);
 
@@ -103,7 +96,7 @@ class GameLogic {
 			if(this.effect[c[0]] === "Q") r.dir = -r.dir;
 			// 9 --- previous player draws one, does not stack
 			if(this.effect[c[0]] === "9") {
-				const prev = r.player_list[this.clamp_to_players(r.turn_i - r.dir)];
+				const prev = r.player_list[r.clamp_to_players(r.turn_i - r.dir)];
 				this.player_draws(prev, 1, "9");
 			}
 			// 4 --- silence rule
@@ -130,7 +123,7 @@ class GameLogic {
 			} else
 				this.can_swap_rules = false;
 
-			r.turn_i = this.clamp_to_players(r.turn_i + r.dir * (this.effect[c[0]] == "A"? 2 : 1));
+			r.turn_i = r.clamp_to_players(r.turn_i + r.dir * (this.effect[c[0]] == "A"? 2 : 1));
 
 			if(r.must_draw > 0)
 				this.event_list.push(new Event(r.player_list[r.turn_i].pid, Event.EFF_7, {draw_count: r.must_draw}));
@@ -168,6 +161,26 @@ class GameLogic {
 				this.event_list.push(new Event(pid, Event.EFF_J, {card_a, card_b}));
 			}
 		}
+	}
+
+	draw_from_stack(pid) {
+		const i = this.room.player_list.findIndex(p => p.pid === pid);
+		const pi = this.room.player_list[i];
+		if(this.room.turn_i !== i) {
+			this.player_draws(pi, 2, "GFY");
+			return;
+		}
+		for(const card of pi.hand)
+			if(this.can_play(i, card)) {
+				this.player_draws(pi, 2, "GFY");
+				return;
+			}
+		if(this.room.must_draw > 0) {
+			this.player_draws(pi, this.room.must_draw, "7");
+			this.must_draw = 0;
+		}
+		this.player_draws(pi, 1, "stack");
+		this.room.mixed_turn = true;
 	}
 
 	get_next_card() {

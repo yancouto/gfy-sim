@@ -52,6 +52,11 @@ CardDrawer.draw_hand_horizontal = function(ctx, hand, x, y, w, h, hide, border_c
 };
 
 CardDrawer.get_clicked_card = function(xc, yc) {
+	if(stack_last_draw) {
+		const [xs, ys, ws, hs] = stack_last_draw;
+		if(Utils.point_in_rect(xc, yc, xs, ys, ws, hs))
+			return -2;
+	}
 	if(!last_draw) return -1;
 	let [x, y, w, h, hl] = last_draw;
 	if(hl == 0) return -1;
@@ -67,9 +72,6 @@ CardDrawer.get_clicked_card = function(xc, yc) {
 		if(Utils.point_in_rect(xc, yc, x + ow + dw * i, y + ((h - ch) / 2), cw, ch))
 			return i;
 
-	[x, y, w, h] = stack_last_draw;
-	if(Utils.point_in_rect(xc, yc, x, y, w, h))
-		return -2;
 	return -1;
 };
 

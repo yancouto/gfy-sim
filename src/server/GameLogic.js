@@ -9,7 +9,7 @@ const now = require("performance-now");
 const INITIAL_HAND_SIZE = 7;
 
 class GameLogic {
-	constructor(room_name) {
+	constructor(room_name, last_winner, win_streak) {
 		this.room = new Room(room_name);
 		this.room.played_cards.push(this.get_next_card());
 		/* Is true while you can change the suit by sending a sticker,
@@ -21,6 +21,8 @@ class GameLogic {
 		for(let c of "23456789TJQKA")
 			this.effect[c] = c;
 		this.event_list = [];
+		this.last_winner = last_winner;
+		this.win_streak = win_streak || 0;
 	}
 
 	add_player(pid) {
@@ -39,6 +41,7 @@ class GameLogic {
 			this.room.turn_i = null;
 		else if(this.room.turn_i === i)
 			this.room.turn_i = (this.room.turn_i + 1) % this.room.player_list.length;
+		this.check_game_end();
 	}
 
 	get_data(pid) {
@@ -56,12 +59,12 @@ class GameLogic {
 	}
 
 	// Sends you back to the wait room
-	won(pi) {
-		console.log(pi.pid + " won!");
+	won(winner_pi) {
+		console.log(winner_pi.pid + " won!");
 		const RoomMenu = require("../server/RoomMenu").RM;
 		RoomMenu.game_list = RoomMenu.game_list.filter(g => g !== this);
 		const WaitRoom = require("../server/WaitRoom");
-		const wait_room = new WaitRoom(this.room.name);
+		const wait_room = new WaitRoom(this.room.name, winner_pi.pid, winner_pi.pid === this.last_winner? this.win_streak + 1 : 1);
 		const ClientManager = require("../server/ClientManager").CM;
 		for(const pi of this.room.player_list) {
 			const client = ClientManager.id_to_client.get(pi.pid);
@@ -150,6 +153,12 @@ class GameLogic {
 				this.first_card_to_swap = null;
 			} else
 				this.can_swap_rules = false;
+
+			// K --- if winner, everyone else draws according to win streak
+			if(this.effect[c[0]] === "K" && pid === this.last_winner)
+				for(const p of r.player_list)
+					if(p.pid !== pid)
+						this.player_draws(p, this.win_streak, "K");
 
 			r.turn_i = r.clamp_to_players(r.turn_i + r.dir * (this.effect[c[0]] == "A"? 2 : 1));
 

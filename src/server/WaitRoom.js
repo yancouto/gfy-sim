@@ -10,10 +10,12 @@ class Client {
 const GameLogic = require("../server/GameLogic");
 
 class WaitRoom {
-	constructor(name) {
+	constructor(name, last_winner, win_streak) {
 		this.name = name;
 		this.player_list = [];
 		this.start_i = null;
+		this.last_winner = last_winner;
+		this.win_streak = win_streak;
 	}
 
 	add_player(client) {
@@ -36,7 +38,9 @@ class WaitRoom {
 			start_i: this.start_i,
 			total: this.player_list.length,
 			confirmed_total: this.player_list.reduce((acc, cur) => acc + (cur.confirmed? 1 : 0), 0),
-			confirmed: this.player_list.find(p => p.client === client).confirmed
+			confirmed: this.player_list.find(p => p.client === client).confirmed,
+			last_winner: this.last_winner,
+			win_streak: this.win_streak
 		};
 	}
 
@@ -45,7 +49,7 @@ class WaitRoom {
 		if(this.start_i !== null && this.player_list.length > 1 && this.player_list.findIndex(p => !p.confirmed) === -1) {
 			const RoomMenu = require("../server/RoomMenu").RM;
 			RoomMenu.wait_rooms = RoomMenu.wait_rooms.filter(w => w !== this);
-			let game = new GameLogic(this.name);
+			let game = new GameLogic(this.name, this.last_winner, this.win_streak);
 			for(let p of this.player_list) {
 				p.client.game = game;
 				p.client.wait_room = null;

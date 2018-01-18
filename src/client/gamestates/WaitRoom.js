@@ -49,6 +49,9 @@ class WaitRoom extends Gamestate {
 		this.ready_but.style.top = Math.floor(H * .4 - this.ready_but.offsetHeight / 2);
 
 		RU.draw_text_align("Ready: " + this.confirmed_total + " out of " + this.total, W / 2,  H * .6, RU.ALIGN_CENTER, RU.ALIGN_CENTER);
+
+		if(this.last_winner)
+			RU.draw_text_align("Last Winner: " + this.last_winner + " (" + this.win_streak + ")", W / 2, H * .8, RU.ALIGN_CENTER, RU.ALIGN_CENTER);
 	}
 
 	sync_to_server(data) {
@@ -57,6 +60,8 @@ class WaitRoom extends Gamestate {
 		this.ready_but.disabled = this.confirmed = (data.confirmed);
 		this.total = data.total;
 		this.confirmed_total = data.confirmed_total;
+		this.last_winner = data.last_winner;
+		this.win_streak = data.win_streak;
 	}
 
 	on_start_click() {

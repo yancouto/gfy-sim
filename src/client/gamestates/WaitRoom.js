@@ -1,10 +1,8 @@
 "use strict";
 
 const Gamestate = require("./Gamestate");
-const GamestateManager = require("./GamestateManager").GM;
 const RU = require("../../client/RenderUtils");
 const Utils = require("../../common/Utils");
-const Room = require("./RoomGamestate");
 
 class WaitRoom extends Gamestate {
 	constructor() {
@@ -59,13 +57,6 @@ class WaitRoom extends Gamestate {
 		this.ready_but.disabled = this.confirmed = (data.confirmed);
 		this.total = data.total;
 		this.confirmed_total = data.confirmed_total;
-	}
-
-	wrong_data(data) {
-		if(data.name === "Room") { // We should be in the room
-			GamestateManager.switch_to(new Room());
-			GamestateManager.sync_data(data); // risky?
-		}
 	}
 
 	on_start_click() {

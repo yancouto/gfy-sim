@@ -43,13 +43,14 @@ class WaitRoom {
 	// Check if the game is ready to start
 	check_done() {
 		if(this.start_i !== null && this.player_list.length > 1 && this.player_list.findIndex(p => !p.confirmed) === -1) {
-			let RoomMenu = require("../server/RoomMenu").RM;
+			const RoomMenu = require("../server/RoomMenu").RM;
 			RoomMenu.wait_rooms = RoomMenu.wait_rooms.filter(w => w !== this);
 			let game = new GameLogic(this.name);
 			for(let p of this.player_list) {
 				p.client.game = game;
 				p.client.wait_room = null;
 				game.add_player(p.client.id);
+				p.client.socket.emit("switch gamestate", "Room");
 			}
 			game.room.turn_i = this.start_i;
 			RoomMenu.game_list.push(game);

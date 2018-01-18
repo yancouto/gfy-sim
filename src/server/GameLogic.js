@@ -55,6 +55,36 @@ class GameLogic {
 		};
 	}
 
+	// Sends you back to the wait room
+	won(pi) {
+		console.log(pi.pid + " won!");
+		const RoomMenu = require("../server/RoomMenu").RM;
+		RoomMenu.game_list = RoomMenu.game_list.filter(g => g !== this);
+		const WaitRoom = require("../server/WaitRoom");
+		const wait_room = new WaitRoom(this.room.name);
+		const ClientManager = require("../server/ClientManager").CM;
+		for(const pi of this.room.player_list) {
+			const client = ClientManager.id_to_client.get(pi.pid);
+			client.game = null;
+			client.wait_room = wait_room;
+			wait_room.add_player(client);
+			client.socket.emit("switch gamestate", "WaitRoom");
+		}
+		RoomMenu.wait_rooms.push(wait_room);
+	}
+
+	check_game_end() {
+		// All other players left
+		if(this.room.player_list.length === 1)
+			this.won(this.room.player_list[0]);
+		// No cards in hand
+		for(const pi of this.room.player_list)
+			if(pi.hand.length === 0) {
+				this.won(pi);
+				return;
+			}
+	}
+
 	can_play(i, card) {
 		const r = this.room;
 		let top = r.played_cards[r.played_cards.length - 1];
@@ -125,6 +155,9 @@ class GameLogic {
 
 			if(r.must_draw > 0)
 				this.event_list.push(new Event(r.player_list[r.turn_i].pid, Event.EFF_7, {draw_count: r.must_draw}));
+
+			this.check_game_end();
+
 		} else {
 			if(this.turn_i === i)
 				this.flush_7();

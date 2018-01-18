@@ -8,6 +8,8 @@ console.log("my socket is " + socket.sessionid);
 
 const GamestateManager = require("../client/gamestates/GamestateManager").GM;
 const RoomMenu = require("../client/gamestates/RoomMenu");
+const RoomGS = require("../client/gamestates/RoomGamestate");
+const WaitRoom = require("../client/gamestates/WaitRoom");
 
 window.addEventListener("load", function() {
 	let game_loop;
@@ -30,6 +32,16 @@ socket.on("update", function(data, do_not_request_more) {
 	// is there reason to wait?
 	if(!do_not_request_more)
 		socket.emit("request update");
+});
+
+socket.on("switch gamestate", function(name) {
+	let gs = null;
+	if(name === "RoomMenu") gs = new RoomMenu();
+	else if(name === "Room") gs = new RoomGS();
+	else if(name === "WaitRoom") gs = new WaitRoom();
+	else console.log("Unknown gamestate " + name);
+	if(gs !== null)
+		GamestateManager.switch_to(gs);
 });
 
 const Utils = require("../common/Utils");

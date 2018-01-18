@@ -14,7 +14,7 @@ server.use("/", express.static(path.join(__dirname, "../..")));
 let requestHandler = server.listen(PORT, () => console.log("Listening on " + PORT));
 const io = socketIO(requestHandler);
 
-console.log("Server started.");
+console.log("Server started. (v" + Utils.game_version + ")");
 
 io.sockets.on("connection", ClientManager.add_client.bind(ClientManager));
 

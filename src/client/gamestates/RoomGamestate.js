@@ -112,7 +112,6 @@ class RoomGamestate extends Gamestate {
 				d.draw(ctx, x + w * d.dx, y + (1 / 6 + (4 / 6) * (1 - d.dy)) * h);
 			}
 		}
-
 	}
 	
 	add_drawable(pid, d) {

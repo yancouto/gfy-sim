@@ -1,5 +1,7 @@
 let Utils = module.exports = {};
 
+Utils.game_version = "0.0.1";
+
 Utils.on_server = false;
 
 Utils.clamp = function(x, min, max) {

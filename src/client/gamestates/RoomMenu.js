@@ -45,6 +45,9 @@ class RoomMenu extends Gamestate {
 		RenderUtils.set_font(10);
 		for(let i = 0; i < this.room_list.length; i++)
 			RenderUtils.draw_text_align(this.room_list[i], W / 2, from + (to - from) / (this.room_list.length + 1) * (i + 1));
+
+		RenderUtils.set_font(5);
+		RenderUtils.draw_text_align("v" + Utils.game_version, RenderUtils.W - 10, RenderUtils.H - 10, RenderUtils.ALIGN_RIGHT, RenderUtils.ALIGN_BOTTOM);
 	}
 
 	sync_to_server(data) {

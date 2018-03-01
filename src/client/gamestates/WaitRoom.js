@@ -25,9 +25,10 @@ class WaitRoom extends Gamestate {
 		this.ready_but.style.position = "absolute";
 		document.body.appendChild(this.ready_but);
 
+		this.start_name = null;
 		this.confirmed = false;
-		this.confirmed_total = 0;
-		this.total = 1;
+		this.my_name = "";
+		this.players = [];
 	}
 
 	draw(ctx) {
@@ -41,6 +42,8 @@ class WaitRoom extends Gamestate {
 		}
 		RU.set_font(15);
 		RU.draw_text_align("Wating room: " + this.room_name, W / 2, 10, undefined, RU.ALIGN_TOP);
+		RU.set_font(13);
+		RU.draw_text_align("My name: " + this.my_name, W / 2, H * .15, RU.ALIGN_CENTER, RU.ALIGN_CENTER);
 
 		this.start_but.style.left = Math.floor((W - this.start_but.offsetWidth) / 2);
 		this.start_but.style.top = Math.floor(H * .3 - this.start_but.offsetHeight / 2);
@@ -48,7 +51,11 @@ class WaitRoom extends Gamestate {
 		this.ready_but.style.left = Math.floor((W - this.ready_but.offsetWidth) / 2);
 		this.ready_but.style.top = Math.floor(H * .4 - this.ready_but.offsetHeight / 2);
 
-		RU.draw_text_align("Ready: " + this.confirmed_total + " out of " + this.total, W / 2,  H * .6, RU.ALIGN_CENTER, RU.ALIGN_CENTER);
+		if(this.start_name)
+			RU.draw_text_align("First Player: " + this.start_name, W / 2,  H * .5, RU.ALIGN_CENTER, RU.ALIGN_CENTER);
+
+		RU.draw_text_align("Ready: " + this.players.filter((p) => p.confirmed).map((p) => p.name).join(", "), W / 2,  H * .6, RU.ALIGN_CENTER, RU.ALIGN_CENTER);
+		RU.draw_text_align("Not Ready: " + this.players.filter((p) => !p.confirmed).map((p) => p.name).join(", "), W / 2,  H * .7, RU.ALIGN_CENTER, RU.ALIGN_CENTER);
 
 		if(this.last_winner)
 			RU.draw_text_align("Last Winner: " + this.last_winner + " (" + this.win_streak + ")", W / 2, H * .8, RU.ALIGN_CENTER, RU.ALIGN_CENTER);
@@ -57,9 +64,10 @@ class WaitRoom extends Gamestate {
 	sync_to_server(data) {
 		this.room_name = data.room_name;
 		this.start_but.disabled = (data.start_i !== null);
+		this.start_name = data.start_i !== null? data.players[data.start_i].name : null;
 		this.ready_but.disabled = this.confirmed = (data.confirmed);
-		this.total = data.total;
-		this.confirmed_total = data.confirmed_total;
+		this.players = data.players;
+		this.my_name = data.my_name;
 		this.last_winner = data.last_winner;
 		this.win_streak = data.win_streak;
 	}

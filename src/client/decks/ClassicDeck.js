@@ -1,3 +1,5 @@
+"use strict";
+
 const classic_deck = module.exports = {};
 classic_deck.cw = 280;
 classic_deck.ch = 390;

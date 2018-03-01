@@ -51,16 +51,16 @@ class RoomMenu {
 		} else console.warn("quit_room on client without room");
 	}
 
-	change_to_room(client, room_name) {
-		console.log("Switching to room " + room_name);
+	change_to_room(client, room_name, user_name) {
+		console.log("Switching to room " + room_name + " with name " + user_name);
 		let game = this.get_game(room_name);
 		if(game instanceof GameLogic) {
 			client.game = game;
-			game.add_player(client.id);
+			game.add_player(client.id, user_name);
 			client.socket.emit("switch gamestate", "Room");
 		} else {
 			client.wait_room = game;
-			game.add_player(client);
+			game.add_player(client, user_name);
 			client.socket.emit("switch gamestate", "WaitRoom");
 		}
 	}

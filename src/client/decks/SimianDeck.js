@@ -1,3 +1,5 @@
+"use strict";
+
 const simian_deck = module.exports = {};
 simian_deck.cw = 252;
 simian_deck.ch = 347;

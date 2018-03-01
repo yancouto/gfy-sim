@@ -31,8 +31,8 @@ class Room {
 		return this.turn_i === i || (this.mixed_turn && this.clamp_to_players(i - 1) === this.turn_i);
 	}
 
-	add_player(pid) {
-		let pi = new PlayerInfo(pid);
+	add_player(pid, name) {
+		let pi = new PlayerInfo(pid, name);
 		this.player_list.push(pi);
 		return pi;
 	}

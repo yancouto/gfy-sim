@@ -11,8 +11,9 @@ for(let i = 0; i < 4; i++)
 	value["CDSH"[i]] = i;
 
 class PlayerInfo {
-	constructor(pid) {
+	constructor(pid, name) {
 		this.pid = pid;
+		this.name = name;
 		this.hand = [];
 		this.last_timestamp = now();
 	}

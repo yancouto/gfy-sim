@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * Creates a pseudo-random value generator. The seed must be an integer.
  *

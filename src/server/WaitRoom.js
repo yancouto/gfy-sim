@@ -1,9 +1,12 @@
 "use strict";
 
+const Utils = require("../common/Utils.js");
+
 class Client {
-	constructor(client) {
+	constructor(client, user_name) {
 		this.client = client;
 		this.confirmed = false;
+		this.user_name = user_name;
 	}
 }
 
@@ -18,8 +21,9 @@ class WaitRoom {
 		this.win_streak = win_streak;
 	}
 
-	add_player(client) {
-		this.player_list.push(new Client(client));
+	add_player(client, user_name) {
+		user_name = Utils.avoid_duplicate_name(user_name, this.player_list.map((p) => p.user_name));
+		this.player_list.push(new Client(client, user_name));
 	}
 
 	rem_player(client) {
@@ -36,9 +40,9 @@ class WaitRoom {
 			name: "WaitRoom",
 			room_name: this.name,
 			start_i: this.start_i,
-			total: this.player_list.length,
-			confirmed_total: this.player_list.reduce((acc, cur) => acc + (cur.confirmed? 1 : 0), 0),
+			players: this.player_list.map((p) => ({"confirmed": p.confirmed, "name": p.user_name})),
 			confirmed: this.player_list.find(p => p.client === client).confirmed,
+			my_name: this.player_list.find(p => p.client === client).user_name,
 			last_winner: this.last_winner,
 			win_streak: this.win_streak
 		};
@@ -53,7 +57,7 @@ class WaitRoom {
 			for(let p of this.player_list) {
 				p.client.game = game;
 				p.client.wait_room = null;
-				game.add_player(p.client.id);
+				game.add_player(p.client.id, p.user_name);
 				p.client.socket.emit("switch gamestate", "Room");
 			}
 			game.room.turn_i = this.start_i;

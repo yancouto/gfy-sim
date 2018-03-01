@@ -5,6 +5,7 @@ const RenderUtils = require("../../client/RenderUtils");
 const GamestateManager = require("./GamestateManager").GM;
 const Utils = require("../../common/Utils");
 const WaitRoom = require("./WaitRoom");
+const NameGenerator = require("../../client/utils/NameGenerator");
 
 class RoomMenu extends Gamestate {
 
@@ -12,11 +13,10 @@ class RoomMenu extends Gamestate {
 		super();
 		this.name = "RoomMenu";
 		this.room_list = [];
-		let frm = document.createElement("div");
-		frm.id = "room_form";
-		frm.style.position = "absolute";
-		frm.style.left = "100px";
-		frm.style.top = "100px";
+		// form for inputting room name
+		let room_frm = document.createElement("div");
+		room_frm.id = "room_form";
+		room_frm.style.position = "absolute";
 		let txt = document.createElement("input");
 		txt.type = "text";
 		let but = document.createElement("input");
@@ -24,10 +24,22 @@ class RoomMenu extends Gamestate {
 		but.type = "button";
 		but.onclick = this.on_button_click.bind(this);
 		but.value = "Go to room";
-		frm.appendChild(txt);
-		frm.appendChild(but);
-		document.body.appendChild(frm);
-		this.frm = frm;
+		room_frm.appendChild(txt);
+		room_frm.appendChild(but);
+		document.body.appendChild(room_frm);
+		this.room_frm = room_frm;
+		// form for inputting your name
+		let name_frm = document.createElement("div");
+		name_frm.style.position = "absolute";
+		txt = document.createElement("input");
+		txt.type = "text";
+		txt.value = NameGenerator.get_random_name();
+		let desc = document.createElement("label");
+		desc.textContent = "My name: ";
+		name_frm.appendChild(desc);
+		name_frm.appendChild(txt);
+		this.name_frm = name_frm;
+		document.body.appendChild(name_frm);
 	}
 
 	update(dt) {
@@ -37,8 +49,10 @@ class RoomMenu extends Gamestate {
 	draw(ctx) {
 		super.draw(ctx);
 		let W = RenderUtils.W, H = RenderUtils.H;
-		this.frm.style.left = Math.floor((W - this.frm.offsetWidth) / 2);
-		this.frm.style.top = Math.floor(H * .05 - this.frm.offsetHeight / 2);
+		this.room_frm.style.left = Math.floor((W - this.room_frm.offsetWidth) / 2);
+		this.room_frm.style.top = Math.floor(H * .05 - this.room_frm.offsetHeight / 2);
+		this.name_frm.style.left = Math.floor((W - this.room_frm.offsetWidth) / 2);
+		this.name_frm.style.top = Math.floor(H * .05 - this.room_frm.offsetHeight / 2) + 50;
 		RenderUtils.set_font(22);
 		RenderUtils.draw_text_align("Currently Open Rooms", W / 2, H * .3);
 		let from = H * .35, to = H * .95;
@@ -55,17 +69,18 @@ class RoomMenu extends Gamestate {
 	}
 
 	on_button_click() {
-		console.log("button clicked");
-		let name = this.frm.children[0].value;
-		if(/^\w{2,20}$/.test(name)) {
-			console.log("Switching to room " + name);
+		let user_name = this.name_frm.children[1].value;
+		let room_name = this.room_frm.children[0].value;
+		if(/^\w{2,20}$/.test(room_name) && user_name.length >= 1 && user_name.indexOf(",") == -1 && user_name.length <= 100) {
+			console.log("Switching to room " + room_name);
 			GamestateManager.switch_to(new WaitRoom());
-			Utils.client_socket.emit("change room", name);
+			Utils.client_socket.emit("change room", room_name, user_name);
 		}
 	}
 
 	exit() {
-		this.frm.parentNode.removeChild(this.frm);
+		this.room_frm.parentNode.removeChild(this.room_frm);
+		this.name_frm.parentNode.removeChild(this.name_frm);
 	}
 }
 

@@ -6,7 +6,6 @@ module.exports = {
     },
     "extends": "eslint:recommended",
     "parserOptions": {
-        "sourceType": "module"
     },
     "rules": {
         "no-console": 0,
@@ -29,6 +28,10 @@ module.exports = {
         "no-mixed-spaces-and-tabs": [
             "error",
             "smart-tabs"
+        ],
+        "strict": [
+            "error",
+            "global"
         ]
     }
 };

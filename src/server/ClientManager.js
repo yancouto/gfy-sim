@@ -16,7 +16,7 @@ class ClientManager {
 		let self = this;
 		socket.on("disconnect", () => self.rem_client(c));
 		socket.on("request update", () => self.upd_client(c));
-		socket.on("change room", (to) => self.change_room(c, to));
+		socket.on("change room", (to, user_name) => self.change_room(c, to, user_name));
 		socket.on("play card", (index) => self.play_card(c, index));
 		socket.on("send sticker", (name) => self.send_sticker(c, name));
 		socket.on("i will start", () => self.i_will_start(c));
@@ -38,11 +38,11 @@ class ClientManager {
 			RoomMenu.update_client(client);
 	}
 
-	change_room(client, new_room) {
+	change_room(client, new_room, user_name) {
 		if(client.on_room)
 			RoomMenu.quit_room(client);
 		if(new_room)
-			RoomMenu.change_to_room(client, new_room);
+			RoomMenu.change_to_room(client, new_room, user_name);
 	}
 
 	play_card(client, index) {

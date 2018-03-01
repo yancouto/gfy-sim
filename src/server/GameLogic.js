@@ -3,6 +3,7 @@
 
 const Room = require("../common/Room");
 const Event = require("../common/Event");
+const Utils = require("../common/Utils");
 
 const now = require("performance-now");
 
@@ -25,8 +26,9 @@ class GameLogic {
 		this.win_streak = win_streak || 0;
 	}
 
-	add_player(pid) {
-		let pi = this.room.add_player(pid);
+	add_player(pid, user_name) {
+		user_name = Utils.avoid_duplicate_name(user_name, this.room.player_list.map((pi) => pi.name));
+		let pi = this.room.add_player(pid, user_name);
 		for(let i = 0; i < INITIAL_HAND_SIZE; i++)
 			pi.hand.push(this.get_next_card());
 		pi.sort_hand();
@@ -60,17 +62,17 @@ class GameLogic {
 
 	// Sends you back to the wait room
 	won(winner_pi) {
-		console.log(winner_pi.pid + " won!");
+		console.log(winner_pi.name + " won!");
 		const RoomMenu = require("../server/RoomMenu").RM;
 		RoomMenu.game_list = RoomMenu.game_list.filter(g => g !== this);
 		const WaitRoom = require("../server/WaitRoom");
-		const wait_room = new WaitRoom(this.room.name, winner_pi.pid, winner_pi.pid === this.last_winner? this.win_streak + 1 : 1);
+		const wait_room = new WaitRoom(this.room.name, winner_pi.name, winner_pi.name === this.last_winner? this.win_streak + 1 : 1);
 		const ClientManager = require("../server/ClientManager").CM;
 		for(const pi of this.room.player_list) {
 			const client = ClientManager.id_to_client.get(pi.pid);
 			client.game = null;
 			client.wait_room = wait_room;
-			wait_room.add_player(client);
+			wait_room.add_player(client, pi.name);
 			client.socket.emit("switch gamestate", "WaitRoom");
 		}
 		RoomMenu.wait_rooms.push(wait_room);
@@ -114,6 +116,7 @@ class GameLogic {
 	}
 
 
+	// player with pid pid played the card with index index from his hand
 	play_card(pid, index) {
 		const r = this.room;
 		const i = r.player_list.findIndex(p => p.pid === pid);
@@ -155,7 +158,7 @@ class GameLogic {
 				this.can_swap_rules = false;
 
 			// K --- if winner, everyone else draws according to win streak
-			if(this.effect[c[0]] === "K" && pid === this.last_winner)
+			if(this.effect[c[0]] === "K" && pi.name === this.last_winner)
 				for(const p of r.player_list)
 					if(p.pid !== pid)
 						this.player_draws(p, this.win_streak, "K");

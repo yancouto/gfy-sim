@@ -27,9 +27,47 @@ CardDrawer.draw_card = function(ctx, card, x, y, w, h, hide, border_color) {
 	ctx.strokeRect(x, y, deck.cw * sc, deck.ch * sc);
 };
 
+function can_fit(w, h, scale) {
+	const [cw, ch] = [deck.cw * scale, deck.ch * scale];
+	const rows = 1 + Math.floor((h - ch) / (ch * .4));
+	const cols = Math.floor(w / (cw / 4));
+	return rows * cols;
+}
+
+// Generator function that yields to the correct position of the cards.
+function* get_positions(x, y, w, h, hl) {
+	if(hl === 0) return;
+	// binary search to find the largest possible card size
+	let l = 0, r = CardDrawer.fix_size(w, h)[0] / deck.cw;
+	for(let i = 0; i < 8; i++) {
+		let m = (l + r) / 2;
+		if(can_fit(w, h, m) >= hl) l = m;
+		else r = m;
+	}
+	const [cw, ch] = [deck.cw * l, deck.ch * l];
+	if(hl === 1) {
+		yield [0, x + ((w - cw) / 2), y + ((h - ch) / 2), cw, ch];
+		return;
+	}
+	const cols = Math.min(hl, Math.floor(w / (cw / 4)));
+	const rows = Math.ceil(hl / cols);
+	const dw = Math.min(cw + 10, (w - cw) / (cols - 1));
+	const ow = (w - ((cols - 1) * dw + cw)) / 2;
+	const dh = rows > 1? (h - ch) / (rows - 1) : 0;
+	const oh = (h - ((rows - 1) * dh + ch)) / 2;
+	let i = 0;
+	for(let r = 0; r < rows; r++)
+		for(let c = 0; c < cols; c++) {
+			yield [i, x + ow + dw * c, y + oh + dh * r, cw, ch];
+			if(++i === hl)
+				return;
+		}
+}
+
 let last_draw = null;
 let stack_last_draw = null;
 
+// Draws hand inside the rectangle area given by (x, y, w, h)
 CardDrawer.draw_hand_horizontal = function(ctx, hand, x, y, w, h, hide, border_color) {
 	const hl = hand.length;
 	if(!hide) {
@@ -37,18 +75,8 @@ CardDrawer.draw_hand_horizontal = function(ctx, hand, x, y, w, h, hide, border_c
 			x, y, w, h, hl
 		];
 	}
-	if(hl == 0) return;
-	let cw = w / Math.max(7, hl / 3);
-	let ch = h;
-	[cw, ch] = CardDrawer.fix_size(cw, ch);
-	if(hl == 1) {
-		CardDrawer.draw_card(ctx, hide? "??" : hand[0], x + ((w - cw) / 2), y + ((h - ch) / 2), cw, ch, hide, border_color);
-		return;
-	}
-	let dw = Math.min(cw + 10, (w - cw) / (hl - 1));
-	let ow = (w - ((hl - 1) * dw + cw)) / 2;
-	for(let i = 0; i < hl; i++)
-		CardDrawer.draw_card(ctx, hide? "??" : hand[i], x + ow + dw * i, y + ((h - ch) / 2), cw, ch, hide, border_color);
+	for(const [i, cx, cy, cw, ch] of get_positions(x, y, w, h, hl))
+		CardDrawer.draw_card(ctx, hide? "??" : hand[i], cx, cy, cw, ch, hide, border_color);
 };
 
 CardDrawer.get_clicked_card = function(xc, yc) {
@@ -58,20 +86,10 @@ CardDrawer.get_clicked_card = function(xc, yc) {
 			return -2;
 	}
 	if(!last_draw) return -1;
-	let [x, y, w, h, hl] = last_draw;
-	if(hl == 0) return -1;
-	let cw = w / Math.max(7, hl / 3);
-	let ch = h;
-	[cw, ch] = CardDrawer.fix_size(cw, ch);
-	if(hl == 1) {
-		return Utils.point_in_rect(xc, yc, x + ((w - cw) / 2), y + ((h - ch) / 2), cw, h)? 0 : -1;
-	}
-	let dw = Math.min(cw + 10, (w - cw) / (hl - 1));
-	let ow = (w - ((hl - 1) * dw + cw)) / 2;
-	for(let i = hl - 1; i >= 0; i--)
-		if(Utils.point_in_rect(xc, yc, x + ow + dw * i, y + ((h - ch) / 2), cw, ch))
+	const rev_cards = [...get_positions(...last_draw)].reverse();
+	for(const [i, x, y, w, h] of rev_cards)
+		if(Utils.point_in_rect(xc, yc, x, y, w, h))
 			return i;
-
 	return -1;
 };
 

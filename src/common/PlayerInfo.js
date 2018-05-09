@@ -16,10 +16,12 @@ class PlayerInfo {
 		this.name = name;
 		this.hand = [];
 		this.last_timestamp = now();
+		// true if player said he/she could have one card
+		this.can_have_one = false;
 	}
 
 	sort_hand() {
-		this.hand.sort(function(a, b) {
+		this.hand.sort((a, b) => {
 			if(a[1] !== b[1])
 				return value[a[1]] - value[b[1]];
 			if(a[0] !== b[0])
@@ -29,8 +31,10 @@ class PlayerInfo {
 	}
 
 	add_to_hand(...cards) {
-		for(let c of cards)
+		for(const c of cards)
 			this.hand.push(c);
+		// resets when you draw cards
+		this.can_have_one = false;
 		this.sort_hand();
 	}
 }

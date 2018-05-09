@@ -11,7 +11,7 @@ for(const card of "23456789TJQKA")
 	list[card] = "assets/stickers/" + card + ".png";
 
 // Extra
-for(const name of ["laugh", "tongue"])
+for(const name of ["laugh", "tongue", "me", "you"])
 	list[name] = "assets/stickers/" + name + ".png";
 
 // Creating Images for the stickers

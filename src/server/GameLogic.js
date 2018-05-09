@@ -214,6 +214,20 @@ class GameLogic {
 				this.event_list.push(new Event(pid, Event.EFF_J, {card_a, card_b}));
 			}
 		}
+
+		// calling "I have one"
+		if(name === "me") {
+			const pi = this.room.player_list.find(p => p.pid === pid);
+			if(pi.hand.length === 1)
+				pi.can_have_one = true;
+		}
+
+		// calling "You have one"
+		if(name === "you") {
+			for(const pi of this.room.player_list)
+				if(pi.pid !== pid && pi.hand.length === 1 && !pi.can_have_one)
+					this.player_draws(pi, 4, "Had 1");
+		}
 	}
 
 	draw_from_stack(pid) {

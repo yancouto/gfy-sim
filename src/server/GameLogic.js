@@ -269,7 +269,17 @@ class GameLogic {
 				return;
 			}
 		this.player_draws(pi, 1, "stack");
-		this.room.mixed_turn = true;
+		let can_play_any = false;
+		for (const card of pi.hand)
+			if (this.can_play(i, card)) {
+				can_play_any = true;
+				break;
+			}
+		if (!can_play_any)
+			this.room.turn_i = this.room.clamp_to_players(
+				this.room.turn_i + this.room.dir
+			);
+		else this.room.mixed_turn = true;
 	}
 
 	get_next_card() {

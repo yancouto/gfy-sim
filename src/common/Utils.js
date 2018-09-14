@@ -2,7 +2,7 @@
 
 const Utils = (module.exports = {});
 
-Utils.game_version = "0.0.1";
+Utils.game_version = "0.0.2";
 
 Utils.on_server = false;
 

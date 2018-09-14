@@ -12,23 +12,25 @@ class RoomMenu {
 
 	update_client(client) {
 		let data;
-		if(client.wait_room !== null) {
+		if (client.wait_room !== null) {
 			data = client.wait_room.get_data(client.id); // shouldn't happen
-		} else if(client.game !== null) {
+		} else if (client.game !== null) {
 			data = client.game.get_data(client.id);
 		} else
 			data = {
-				room_list: Array.from(this.game_list, r => r.room.name).concat(Array.from(this.wait_rooms, w => w.name)),
-				name: "RoomMenu"
+				room_list: Array.from(this.game_list, r => r.room.name).concat(
+					Array.from(this.wait_rooms, w => w.name)
+				),
+				name: "RoomMenu",
 			};
 		client.socket.emit("update", data);
 	}
 
 	get_game(room_name) {
-		let game = this.game_list.find((r) => r.room.name === room_name);
-		if(game) return game;
+		let game = this.game_list.find(r => r.room.name === room_name);
+		if (game) return game;
 		let room = this.wait_rooms.find(r => r.name === room_name);
-		if(!room) {
+		if (!room) {
 			room = new WaitRoom(room_name);
 			this.wait_rooms.push(room);
 		}
@@ -36,13 +38,15 @@ class RoomMenu {
 	}
 
 	quit_room(client) {
-		if(client.game) {
+		if (client.game) {
 			console.log("Exiting game room " + client.game.room.name);
 			client.game.rem_player(client.id);
-			this.game_list = this.game_list.filter(w => w.room.player_list.length > 0);
+			this.game_list = this.game_list.filter(
+				w => w.room.player_list.length > 0
+			);
 			client.game = null;
 			client.socket.emit("switch gamestate", "RoomMenu");
-		} else if(client.wait_room) {
+		} else if (client.wait_room) {
 			console.log("Exiting wait room " + client.wait_room.name);
 			client.wait_room.rem_player(client);
 			this.wait_rooms = this.wait_rooms.filter(w => w.player_list.length > 0);
@@ -54,7 +58,7 @@ class RoomMenu {
 	change_to_room(client, room_name, user_name) {
 		console.log("Switching to room " + room_name + " with name " + user_name);
 		let game = this.get_game(room_name);
-		if(game instanceof GameLogic) {
+		if (game instanceof GameLogic) {
 			client.game = game;
 			game.add_player(client.id, user_name);
 			client.socket.emit("switch gamestate", "Room");

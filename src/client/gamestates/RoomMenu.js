@@ -8,7 +8,6 @@ const WaitRoom = require("./WaitRoom");
 const NameGenerator = require("../../client/utils/NameGenerator");
 
 class RoomMenu extends Gamestate {
-
 	constructor() {
 		super();
 		this.name = "RoomMenu";
@@ -48,20 +47,35 @@ class RoomMenu extends Gamestate {
 
 	draw(ctx) {
 		super.draw(ctx);
-		let W = RenderUtils.W, H = RenderUtils.H;
+		let W = RenderUtils.W,
+			H = RenderUtils.H;
 		this.room_frm.style.left = Math.floor((W - this.room_frm.offsetWidth) / 2);
-		this.room_frm.style.top = Math.floor(H * .05 - this.room_frm.offsetHeight / 2);
+		this.room_frm.style.top = Math.floor(
+			H * 0.05 - this.room_frm.offsetHeight / 2
+		);
 		this.name_frm.style.left = Math.floor((W - this.room_frm.offsetWidth) / 2);
-		this.name_frm.style.top = Math.floor(H * .05 - this.room_frm.offsetHeight / 2) + 50;
+		this.name_frm.style.top =
+			Math.floor(H * 0.05 - this.room_frm.offsetHeight / 2) + 50;
 		RenderUtils.set_font(22);
-		RenderUtils.draw_text_align("Currently Open Rooms", W / 2, H * .3);
-		let from = H * .35, to = H * .95;
+		RenderUtils.draw_text_align("Currently Open Rooms", W / 2, H * 0.3);
+		let from = H * 0.35,
+			to = H * 0.95;
 		RenderUtils.set_font(10);
-		for(let i = 0; i < this.room_list.length; i++)
-			RenderUtils.draw_text_align(this.room_list[i], W / 2, from + (to - from) / (this.room_list.length + 1) * (i + 1));
+		for (let i = 0; i < this.room_list.length; i++)
+			RenderUtils.draw_text_align(
+				this.room_list[i],
+				W / 2,
+				from + ((to - from) / (this.room_list.length + 1)) * (i + 1)
+			);
 
 		RenderUtils.set_font(5);
-		RenderUtils.draw_text_align("v" + Utils.game_version, RenderUtils.W - 10, RenderUtils.H - 10, RenderUtils.ALIGN_RIGHT, RenderUtils.ALIGN_BOTTOM);
+		RenderUtils.draw_text_align(
+			"v" + Utils.game_version,
+			RenderUtils.W - 10,
+			RenderUtils.H - 10,
+			RenderUtils.ALIGN_RIGHT,
+			RenderUtils.ALIGN_BOTTOM
+		);
 	}
 
 	sync_to_server(data) {
@@ -71,7 +85,12 @@ class RoomMenu extends Gamestate {
 	on_button_click() {
 		let user_name = this.name_frm.children[1].value;
 		let room_name = this.room_frm.children[0].value;
-		if(/^\w{2,20}$/.test(room_name) && user_name.length >= 1 && user_name.indexOf(",") == -1 && user_name.length <= 100) {
+		if (
+			/^\w{2,20}$/.test(room_name) &&
+			user_name.length >= 1 &&
+			user_name.indexOf(",") == -1 &&
+			user_name.length <= 100
+		) {
 			console.log("Switching to room " + room_name);
 			GamestateManager.switch_to(new WaitRoom());
 			Utils.client_socket.emit("change room", room_name, user_name);

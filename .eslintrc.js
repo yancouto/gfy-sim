@@ -4,7 +4,8 @@ module.exports = {
         "es6": true,
         "node": true
     },
-    "extends": "eslint:recommended",
+    "plugins": ["prettier"],
+    "extends": "prettier",
     "parserOptions": {
     },
     "rules": {
@@ -17,14 +18,6 @@ module.exports = {
             "error",
             "unix"
         ],
-        "quotes": [
-            "error",
-            "double"
-        ],
-        "semi": [
-            "error",
-            "always"
-        ],
         "no-mixed-spaces-and-tabs": [
             "error",
             "smart-tabs"
@@ -32,6 +25,7 @@ module.exports = {
         "strict": [
             "error",
             "global"
-        ]
+        ],
+        "prettier/prettier": "error"
     }
 };

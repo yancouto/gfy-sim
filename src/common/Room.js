@@ -22,13 +22,16 @@ class Room {
 	}
 
 	clamp_to_players(i) {
-		if(i < 0 || i >= this.player_list.length) i %= this.player_list.length;
-		if(i < 0) i += this.player_list.length;
+		if (i < 0 || i >= this.player_list.length) i %= this.player_list.length;
+		if (i < 0) i += this.player_list.length;
 		return i;
 	}
 
 	this_turn_or_mixed(i) {
-		return this.turn_i === i || (this.mixed_turn && this.clamp_to_players(i - 1) === this.turn_i);
+		return (
+			this.turn_i === i ||
+			(this.mixed_turn && this.clamp_to_players(i - 1) === this.turn_i)
+		);
 	}
 
 	add_player(pid, name) {
@@ -38,11 +41,11 @@ class Room {
 	}
 
 	rem_player(pid) {
-		this.player_list = this.player_list.filter((p) => p.pid !== pid);
+		this.player_list = this.player_list.filter(p => p.pid !== pid);
 	}
 
 	get_player_info(pid) {
-		return this.player_list.find((p) => p.pid == pid);
+		return this.player_list.find(p => p.pid == pid);
 	}
 
 	remove_last_card_from_played() {

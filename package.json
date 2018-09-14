@@ -1,38 +1,41 @@
 {
-	"name": "gfy_simulator",
-	"version": "0.0.1",
-	"description": "Go Fuck Yourself Simulator",
-	"main": "src/server/server_main.js",
-	"engines": {
-		"node": "6.11.1"
-	},
-	"dependencies": {
-		"express": "^4.14.0",
-		"performance-now": "^2.1.0",
-		"socket.io": "^1.4.8",
-		"webpack": "^1.14.0"
-	},
-	"devDependencies": {
-		"eslint": "^3.10.2"
-	},
-	"scripts": {
-		"start": "node src/server/server_main.js",
-		"build": "webpack",
-		"lint": "eslint src/*/*.js src/*/*/*.js"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/yancouto/gfy-sim.git"
-	},
-	"keywords": [
-		"game",
-		"simulator",
-		"multiplayer"
-	],
-	"author": "Yan Couto",
-	"license": "WTFPL",
-	"bugs": {
-		"url": "https://github.com/yancouto/gfy-sim/issues"
-	},
-	"homepage": "https://github.com/yancouto/gfy-sim#readme"
+  "name": "gfy_simulator",
+  "version": "0.0.1",
+  "description": "Go Fuck Yourself Simulator",
+  "main": "src/server/server_main.js",
+  "engines": {
+    "node": "6.11.1"
+  },
+  "dependencies": {
+    "express": "^4.14.0",
+    "performance-now": "^2.1.0",
+    "socket.io": "^1.4.8",
+    "webpack": "^1.14.0"
+  },
+  "devDependencies": {
+    "eslint": "^3.10.2",
+    "eslint-config-prettier": "^3.0.1",
+    "eslint-plugin-prettier": "^2.6.2",
+    "prettier": "1.14.2"
+  },
+  "scripts": {
+    "start": "node src/server/server_main.js",
+    "build": "webpack",
+    "lint": "eslint src/*/*.js src/*/*/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yancouto/gfy-sim.git"
+  },
+  "keywords": [
+    "game",
+    "simulator",
+    "multiplayer"
+  ],
+  "author": "Yan Couto",
+  "license": "WTFPL",
+  "bugs": {
+    "url": "https://github.com/yancouto/gfy-sim/issues"
+  },
+  "homepage": "https://github.com/yancouto/gfy-sim#readme"
 }

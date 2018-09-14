@@ -17,14 +17,14 @@ class RoomPCControls {
 		let x = ev.x - RU.CANVAS_BORDER;
 		let y = ev.y - RU.CANVAS_BORDER;
 		let gs = GamestateManager.current_gamestate;
-		if(!gs.room) return;
+		if (!gs.room) return;
 		var index = CardDrawer.get_clicked_card(x, y);
-		if(index !== -1) {
+		if (index !== -1) {
 			this.input_handler.play_card(index);
 			return;
 		}
 		let name = gs.sticker_panel.get_clicked_sticker(x, y);
-		if(name) {
+		if (name) {
 			this.input_handler.send_sticker(name);
 			return;
 		}

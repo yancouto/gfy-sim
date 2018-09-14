@@ -30,18 +30,16 @@ socket.emit("request update");
 socket.on("update", function(data, do_not_request_more) {
 	GamestateManager.sync_data(data);
 	// is there reason to wait?
-	if(!do_not_request_more)
-		socket.emit("request update");
+	if (!do_not_request_more) socket.emit("request update");
 });
 
 socket.on("switch gamestate", function(name) {
 	let gs = null;
-	if(name === "RoomMenu") gs = new RoomMenu();
-	else if(name === "Room") gs = new RoomGS();
-	else if(name === "WaitRoom") gs = new WaitRoom();
+	if (name === "RoomMenu") gs = new RoomMenu();
+	else if (name === "Room") gs = new RoomGS();
+	else if (name === "WaitRoom") gs = new WaitRoom();
 	else console.log("Unknown gamestate " + name);
-	if(gs !== null)
-		GamestateManager.switch_to(gs);
+	if (gs !== null) GamestateManager.switch_to(gs);
 });
 
 const Utils = require("../common/Utils");

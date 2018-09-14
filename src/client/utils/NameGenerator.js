@@ -1,7 +1,7 @@
 // Generates random names
 "use strict";
 
-const NameGenerator = module.exports = {};
+const NameGenerator = (module.exports = {});
 
 const name_list = [
 	"Aardwolf",
@@ -1040,7 +1040,7 @@ const name_list = [
 	"Gideon Mace",
 	"Giganto",
 	"Gigantus",
-	"Donald \"Donny\" Gill",
+	'Donald "Donny" Gill',
 	"Ritchie Gilmore",
 	"Gin Genie",
 	"Shi'ar Gladiator",
@@ -1206,7 +1206,7 @@ const name_list = [
 	"Hobgoblin",
 	"Hobgoblin II",
 	"Cameron Hodge",
-	"Harold \"Happy\" Hogan",
+	'Harold "Happy" Hogan',
 	"Hoder",
 	"Hogun",
 	"Holocaust",
@@ -1584,7 +1584,7 @@ const name_list = [
 	"Machinesmith",
 	"Machine Teen",
 	"Al MacKenzie",
-	"Mary \"Skeeter\" MacPherran",
+	'Mary "Skeeter" MacPherran',
 	"Moira MacTaggert",
 	"Mad-Dog",
 	"Mad Dog Rassitano",
@@ -1653,7 +1653,7 @@ const name_list = [
 	"Margali Szardos",
 	"Maria Hill",
 	"Mariko Yashida",
-	"James \"Jimmy\" Marks",
+	'James "Jimmy" Marks',
 	"Cain Marko",
 	"Flint Marko",
 	"Marlene Alraune",
@@ -1703,9 +1703,9 @@ const name_list = [
 	"Wanda Maximoff",
 	"Maximus",
 	"May Parker",
-	"May \"Mayday\" Parker",
+	'May "Mayday" Parker',
 	"Mayhem",
-	"Henry \"Hank\" McCoy",
+	'Henry "Hank" McCoy',
 	"Namor McKenzie",
 	"Meanstreak",
 	"Meathook",
@@ -2045,7 +2045,7 @@ const name_list = [
 	"Possessor",
 	"Postman",
 	"Postmortem",
-	"Virginia \"Pepper\" Potts",
+	'Virginia "Pepper" Potts',
 	"Poundcakes",
 	"Powderkeg",
 	"Alex Power",
@@ -2085,7 +2085,7 @@ const name_list = [
 	"James Proudstar",
 	"John Proudstar",
 	"Prowler",
-	"Katherine \"Kitty\" Pryde",
+	'Katherine "Kitty" Pryde',
 	"Psi-Lord",
 	"Psyche",
 	"Psycho-Man",
@@ -2251,7 +2251,7 @@ const name_list = [
 	"Sauron",
 	"Savage Steel",
 	"Sam Sawyer",
-	"Samuel \"Starr\" Saxon",
+	'Samuel "Starr" Saxon',
 	"Sayge",
 	"Scaleface",
 	"Scalphunter",
@@ -2939,7 +2939,7 @@ const name_list = [
 	"Zom",
 	"Zombie",
 	"Zuras",
-	"Zzzax"
+	"Zzzax",
 ];
 
 NameGenerator.get_random_name = function() {

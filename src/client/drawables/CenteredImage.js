@@ -6,8 +6,7 @@ const Drawable = require("./Drawable");
 class CenteredImage extends Drawable {
 	constructor(img, sz) {
 		super();
-		if(img instanceof Image)
-			this.img = img;
+		if (img instanceof Image) this.img = img;
 		else {
 			this.img = new Image();
 			this.img.src = img;

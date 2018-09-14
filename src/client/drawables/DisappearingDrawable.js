@@ -16,7 +16,7 @@ class DisappearingDrawable extends Drawable {
 	update(dt) {
 		this.drawable.update(dt);
 		this.a -= dt * this.speed;
-		if(this.a < 0) {
+		if (this.a < 0) {
 			this.a = 0;
 			this.can_delete = true;
 		}
@@ -25,8 +25,9 @@ class DisappearingDrawable extends Drawable {
 	draw(ctx, x, y, w, h) {
 		// Assumes it is filled
 		const [r, g, b] = this.color;
-		ctx.fillStyle = "rgba(" + r + "," + g + "," + b + "," + Math.floor(this.a) + ")";
-		ctx.globalAlpha = (this.a / 255);
+		ctx.fillStyle =
+			"rgba(" + r + "," + g + "," + b + "," + Math.floor(this.a) + ")";
+		ctx.globalAlpha = this.a / 255;
 		this.drawable.draw(ctx, x, y, w, h);
 		ctx.globalAlpha = 1;
 	}

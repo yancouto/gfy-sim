@@ -10,7 +10,8 @@ class RoomInputHandler {
 	}
 
 	play_card(index) {
-		if(index < 0) { // clicked on stack
+		if (index < 0) {
+			// clicked on stack
 			Utils.client_socket.emit("draw from stack");
 			return;
 		}

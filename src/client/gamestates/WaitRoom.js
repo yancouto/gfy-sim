@@ -13,7 +13,7 @@ class WaitRoom extends Gamestate {
 		this.start_but = document.createElement("input");
 		this.start_but.type = "button";
 		this.start_but.onclick = this.on_start_click.bind(this);
-		this.start_but.value = "I'll start!";
+		this.start_but.value = "I'm first!";
 		this.start_but.style.position = "absolute";
 		document.body.appendChild(this.start_but);
 

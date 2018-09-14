@@ -210,7 +210,9 @@ class GameLogic {
 		if (this.room.must_draw > 0) {
 			this.player_draws(pi, this.room.must_draw, "7");
 			this.room.must_draw = 0;
+			return true;
 		}
+		return false;
 	}
 
 	send_sticker(pid, name) {
@@ -262,7 +264,7 @@ class GameLogic {
 			this.player_draws(pi, 2, "GFY");
 			return;
 		}
-		this.flush_7();
+		if (this.flush_7()) return;
 		for (const card of pi.hand)
 			if (this.can_play(i, card)) {
 				this.player_draws(pi, 2, "GFY");
@@ -293,6 +295,8 @@ class GameLogic {
 	player_draws(pi, draw_count, reason) {
 		for (let i = 0; i < draw_count; i++) pi.add_to_hand(this.get_next_card());
 		this.event_list.push(new Event(pi.pid, Event.DRAW, { draw_count, reason }));
+		const i = this.room.player_list.findIndex(p => p === pi);
+		if (this.room.turn_i === i) this.room.mixed_turn = true;
 	}
 }
 

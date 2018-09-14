@@ -137,7 +137,14 @@ class GameLogic {
 		const i = r.player_list.findIndex(p => p.pid === pid);
 		const pi = r.player_list[i];
 		const c = pi.hand[index];
-		if (this.can_play(i, c)) {
+		if (pi.last_play_6 > now() - 5000 && pi.hand.length > 1) {
+			// Giving a card to the next player
+			pi.hand = pi.hand.filter((c, id) => id != index);
+			const npi = r.player_list[r.clamp_to_players(i + pi.dir_when_played_6)];
+			npi.add_to_hand(c);
+			pi.last_play_6 = Number.NEGATIVE_INFINITY;
+			this.event_list.push(new Event(npi.pid, Event.EFF_6));
+		} else if (this.can_play(i, c)) {
 			r.mixed_turn = false;
 			r.turn_i = i; // becomes this players turn if it was not already
 			pi.hand = pi.hand.filter((c, id) => id != index);
@@ -159,6 +166,12 @@ class GameLogic {
 			r.current_suit = null;
 			// 8 --- can change suit
 			this.can_change_suit = this.effect[c[0]] === "8" ? pi.pid : false;
+
+			// 6 --- Can give card to next player
+			if (this.effect[c[0]] === "6") {
+				pi.last_play_6 = now();
+				pi.dir_when_played_6 = r.dir;
+			}
 
 			// J --- can swap rules
 			if (this.effect[c[0]] === "J") {

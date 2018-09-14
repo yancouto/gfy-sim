@@ -16,6 +16,12 @@ class PlayerInfo {
 		this.last_timestamp = now();
 		// true if player said he/she could have one card
 		this.can_have_one = false;
+		// last time player played a 6. They can give a card from their hands for
+		// 5 seconds after that
+		this.last_play_6 = Number.NEGATIVE_INFINITY;
+		// Since the direction may change until the player uses the 6, we need
+		// to store its original value
+		this.dir_when_played_6 = 1;
 	}
 
 	sort_hand() {

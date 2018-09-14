@@ -17,6 +17,7 @@ Object.assign(Event, {
 	EFF_7: 2, // Player will draw unless he/she plays a 7
 	EFF_J: 3, // Player swapped two cards
 	EFF_8: 4, // Player changed suit
+	EFF_6: 5, // Player receives card from previous player
 });
 
 module.exports = Event;

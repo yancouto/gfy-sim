@@ -183,6 +183,8 @@ class RoomGamestate extends Gamestate {
 			);
 		} else if (ev.type === Event.EFF_8) {
 			drawable = new CenteredText("Changed suit to " + ev.info.new_suit);
+		} else if (ev.type === Event.EFF_6) {
+			drawable = new CenteredText("Received card");
 		}
 
 		if (drawable)

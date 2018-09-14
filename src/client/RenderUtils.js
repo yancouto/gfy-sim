@@ -28,7 +28,7 @@ window.addEventListener("load", function() {
 });
 
 RU.set_font = function(size, type) {
-	let pc = Math.min(RU.W / 2560, RU.H / 1080);
+	const pc = Math.min(RU.W / 2560, RU.H / 1080);
 	RU.font_height = Math.round((pc * size * 120) / 22);
 	RU.ctx.font = RU.font_height + "px " + (type || "sans-serif");
 };
@@ -38,7 +38,7 @@ RU.ALIGN_CENTER = 1;
 RU.ALIGN_RIGHT = RU.ALIGN_BOTTOM = 2;
 // align horizontal and vertical
 RU.draw_text_align = function(text, x, y, h_align, v_align) {
-	let sz = RU.ctx.measureText(text);
+	const sz = RU.ctx.measureText(text);
 	if (h_align === undefined || h_align === 1) x -= sz.width / 2;
 	else if (h_align === 2) x -= sz.width;
 	if (v_align === undefined || v_align === 1) y += RU.font_height / 2;

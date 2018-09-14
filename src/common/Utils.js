@@ -1,6 +1,6 @@
 "use strict";
 
-let Utils = (module.exports = {});
+const Utils = (module.exports = {});
 
 Utils.game_version = "0.0.1";
 

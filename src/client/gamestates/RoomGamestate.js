@@ -48,17 +48,17 @@ class RoomGamestate extends Gamestate {
 	update(dt) {
 		// eslint-disable-line no-unused-vars
 		this.sticker_panel.update(dt);
-		for (let pid in this.drawables)
-			for (let d of this.drawables[pid]) {
+		for (const pid in this.drawables)
+			for (const d of this.drawables[pid]) {
 				d.dy = Math.min(1, d.dy + dt * 0.5);
 				d.update(dt);
 			}
-		for (let s in this.drawables)
+		for (const s in this.drawables)
 			this.drawables[s] = this.drawables[s].filter(d => !d.can_delete);
 	}
 
 	draw(ctx) {
-		let sc = Math.min(3000 / RU.W, 2001 / RU.H);
+		const sc = Math.min(3000 / RU.W, 2001 / RU.H);
 		ctx.drawImage(
 			this.background,
 			0,
@@ -76,7 +76,7 @@ class RoomGamestate extends Gamestate {
 			RU.draw_text_align("Loading...", RU.W / 2, RU.H / 2);
 			return;
 		}
-		let m_i = this.room.player_list.findIndex(p => p.pid === this.me.pid);
+		const m_i = this.room.player_list.findIndex(p => p.pid === this.me.pid);
 
 		ctx.fillStyle = "rgb(255, 255, 255)";
 		RU.set_font(12);
@@ -90,7 +90,7 @@ class RoomGamestate extends Gamestate {
 
 		const pl = this.room.player_list.length;
 		for (let i = 1; i < pl; i++) {
-			let j = (m_i + i) % pl;
+			const j = (m_i + i) % pl;
 			const pi = this.room.player_list[j];
 			const x = (i - 1) * ((RU.W * 0.9) / (pl - 1)) + i * ((RU.W * 0.1) / pl);
 			const y = 10;
@@ -109,7 +109,7 @@ class RoomGamestate extends Gamestate {
 			);
 
 			if (this.drawables[pi.pid])
-				for (let k in this.drawables[pi.pid]) {
+				for (const k in this.drawables[pi.pid]) {
 					const d = this.drawables[pi.pid][k];
 					d.drawable.sz = Math.min(w, h) / 3;
 					d.draw(ctx, x + w * d.dx, y + (1 / 6 + (4 / 6) * (1 - d.dy)) * h);
@@ -145,7 +145,7 @@ class RoomGamestate extends Gamestate {
 		if (this.drawables[this.me.pid]) {
 			const [x, y] = [RU.W * 0.3, RU.H * 0.3];
 			const [w, h] = [RU.W * 0.5, RU.H * 0.3];
-			for (let k in this.drawables[this.me.pid]) {
+			for (const k in this.drawables[this.me.pid]) {
 				const d = this.drawables[this.me.pid][k];
 				d.drawable.sz = Math.min(w, h) / 3;
 				d.draw(ctx, x + w * d.dx, y + (1 / 6 + (4 / 6) * (1 - d.dy)) * h);
@@ -163,8 +163,8 @@ class RoomGamestate extends Gamestate {
 	process_event(ev) {
 		console.log("Got event " + ev.type + " from " + ev.source);
 		let drawable = null;
-		let color = [0, 0, 0];
-		let timeout = 2;
+		const color = [0, 0, 0];
+		const timeout = 2;
 		if (ev.type === Event.SENT_STICKER) {
 			drawable = new CenteredImage(StickerList[ev.info.name], 50);
 		} else if (ev.type === Event.DRAW) {
@@ -195,7 +195,7 @@ class RoomGamestate extends Gamestate {
 	sync_to_server(data) {
 		this.room = Object.setPrototypeOf(data.room, Room.prototype);
 		this.me = this.room.player_list.find(p => p.pid == Utils.client_socket.id);
-		for (let e of data.new_events) this.process_event(e);
+		for (const e of data.new_events) this.process_event(e);
 	}
 }
 

@@ -29,7 +29,7 @@ simian_deck.map["??"] = [
 ];
 
 simian_deck.draw_card = function(ctx, card, x, y, w, h) {
-	let [dx, dy] = this.map[card];
+	const [dx, dy] = this.map[card];
 	ctx.drawImage(this.sheet, dx, dy, this.cw, this.ch, x, y, w, h);
 };
 

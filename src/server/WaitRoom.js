@@ -30,7 +30,7 @@ class WaitRoom {
 	}
 
 	rem_player(client) {
-		let i = this.player_list.findIndex(p => p.client === client);
+		const i = this.player_list.findIndex(p => p.client === client);
 		if (i === -1) return;
 		this.player_list = this.player_list.filter(p => p.client !== client);
 		if (i === this.start_i) this.start_i = null;
@@ -62,8 +62,8 @@ class WaitRoom {
 		) {
 			const RoomMenu = require("../server/RoomMenu").RM;
 			RoomMenu.wait_rooms = RoomMenu.wait_rooms.filter(w => w !== this);
-			let game = new GameLogic(this.name, this.last_winner, this.win_streak);
-			for (let p of this.player_list) {
+			const game = new GameLogic(this.name, this.last_winner, this.win_streak);
+			for (const p of this.player_list) {
 				p.client.game = game;
 				p.client.wait_room = null;
 				game.add_player(p.client.id, p.user_name);

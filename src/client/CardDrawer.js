@@ -9,15 +9,15 @@ const random = new PRNG(12);
 const ClassicDeck = require("../client/decks/ClassicDeck"); // eslint-disable-line no-unused-vars
 const SimianDeck = require("../client/decks/SimianDeck"); // eslint-disable-line no-unused-vars
 
-let deck = SimianDeck;
+const deck = SimianDeck;
 
 CardDrawer.fix_size = function(w, h) {
-	let sc = Math.min(w ? w / deck.cw : 1, h ? h / deck.ch : 1);
+	const sc = Math.min(w ? w / deck.cw : 1, h ? h / deck.ch : 1);
 	return [deck.cw * sc, deck.ch * sc];
 };
 
 CardDrawer.draw_card = function(ctx, card, x, y, w, h, hide, border_color) {
-	let sc = Math.min(w ? w / deck.cw : 1, h ? h / deck.ch : 1);
+	const sc = Math.min(w ? w / deck.cw : 1, h ? h / deck.ch : 1);
 	if (hide) deck.draw_back(ctx, x, y, deck.cw * sc, deck.ch * sc);
 	else deck.draw_card(ctx, card, x, y, deck.cw * sc, deck.ch * sc);
 	ctx.lineWidth = 2; // thickness
@@ -39,7 +39,7 @@ function* get_positions(x, y, w, h, hl) {
 	let l = 0,
 		r = CardDrawer.fix_size(w, h)[0] / deck.cw;
 	for (let i = 0; i < 8; i++) {
-		let m = (l + r) / 2;
+		const m = (l + r) / 2;
 		if (can_fit(w, h, m) >= hl) l = m;
 		else r = m;
 	}
@@ -107,7 +107,7 @@ CardDrawer.get_clicked_card = function(xc, yc) {
 
 CardDrawer.draw_played_cards = function(ctx, cards, x, y, w, h, seed) {
 	const sq2 = Math.sqrt(2);
-	let [cw, ch] = CardDrawer.fix_size(w / sq2, h / sq2);
+	const [cw, ch] = CardDrawer.fix_size(w / sq2, h / sq2);
 	ctx.save();
 	ctx.translate(x + w / 2, y + h / 2);
 	random._seed = seed || random._seed;
@@ -131,12 +131,12 @@ CardDrawer.draw_played_cards = function(ctx, cards, x, y, w, h, seed) {
 
 CardDrawer.draw_stack = function(ctx, x, y, w, h) {
 	const n = 13;
-	let [cw, ch] = CardDrawer.fix_size(w * 0.8, h * 0.95);
-	let dw = (cw * (0.2 / 0.8)) / (n - 1);
-	let ow = (w - dw * (n - 1) - cw) / 2;
+	const [cw, ch] = CardDrawer.fix_size(w * 0.8, h * 0.95);
+	const dw = (cw * (0.2 / 0.8)) / (n - 1);
+	const ow = (w - dw * (n - 1) - cw) / 2;
 
-	let dh = (ch * (0.05 / 0.95)) / (n - 1);
-	let oh = (h - dh * (n - 1) - ch) / 2;
+	const dh = (ch * (0.05 / 0.95)) / (n - 1);
+	const oh = (h - dh * (n - 1) - ch) / 2;
 	for (let i = 0; i < n; i++)
 		CardDrawer.draw_card(
 			ctx,

@@ -13,12 +13,12 @@ class RoomMenu extends Gamestate {
 		this.name = "RoomMenu";
 		this.room_list = [];
 		// form for inputting room name
-		let room_frm = document.createElement("div");
+		const room_frm = document.createElement("div");
 		room_frm.id = "room_form";
 		room_frm.style.position = "absolute";
 		let txt = document.createElement("input");
 		txt.type = "text";
-		let but = document.createElement("input");
+		const but = document.createElement("input");
 		but.style.margin = "10px";
 		but.type = "button";
 		but.onclick = this.on_button_click.bind(this);
@@ -28,12 +28,12 @@ class RoomMenu extends Gamestate {
 		document.body.appendChild(room_frm);
 		this.room_frm = room_frm;
 		// form for inputting your name
-		let name_frm = document.createElement("div");
+		const name_frm = document.createElement("div");
 		name_frm.style.position = "absolute";
 		txt = document.createElement("input");
 		txt.type = "text";
 		txt.value = NameGenerator.get_random_name();
-		let desc = document.createElement("label");
+		const desc = document.createElement("label");
 		desc.textContent = "My name: ";
 		name_frm.appendChild(desc);
 		name_frm.appendChild(txt);
@@ -47,8 +47,8 @@ class RoomMenu extends Gamestate {
 
 	draw(ctx) {
 		super.draw(ctx);
-		let W = RenderUtils.W,
-			H = RenderUtils.H;
+		const W = RenderUtils.W;
+		const H = RenderUtils.H;
 		this.room_frm.style.left = Math.floor((W - this.room_frm.offsetWidth) / 2);
 		this.room_frm.style.top = Math.floor(
 			H * 0.05 - this.room_frm.offsetHeight / 2
@@ -58,8 +58,8 @@ class RoomMenu extends Gamestate {
 			Math.floor(H * 0.05 - this.room_frm.offsetHeight / 2) + 50;
 		RenderUtils.set_font(22);
 		RenderUtils.draw_text_align("Currently Open Rooms", W / 2, H * 0.3);
-		let from = H * 0.35,
-			to = H * 0.95;
+		const from = H * 0.35;
+		const to = H * 0.95;
 		RenderUtils.set_font(10);
 		for (let i = 0; i < this.room_list.length; i++)
 			RenderUtils.draw_text_align(
@@ -83,8 +83,8 @@ class RoomMenu extends Gamestate {
 	}
 
 	on_button_click() {
-		let user_name = this.name_frm.children[1].value;
-		let room_name = this.room_frm.children[0].value;
+		const user_name = this.name_frm.children[1].value;
+		const room_name = this.room_frm.children[0].value;
 		if (
 			/^\w{2,20}$/.test(room_name) &&
 			user_name.length >= 1 &&

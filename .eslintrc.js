@@ -26,6 +26,7 @@ module.exports = {
             "error",
             "global"
         ],
+        "prefer-const": "error",
         "prettier/prettier": "error"
     }
 };

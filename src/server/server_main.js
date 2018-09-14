@@ -13,7 +13,7 @@ server.get("/", (req, res) =>
 	res.sendFile(path.join(__dirname, "../../index.html"))
 );
 server.use("/", express.static(path.join(__dirname, "../..")));
-let requestHandler = server.listen(PORT, () =>
+const requestHandler = server.listen(PORT, () =>
 	console.log("Listening on " + PORT)
 );
 const io = socketIO(requestHandler);

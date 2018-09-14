@@ -27,7 +27,7 @@ class RoomMenu {
 	}
 
 	get_game(room_name) {
-		let game = this.game_list.find(r => r.room.name === room_name);
+		const game = this.game_list.find(r => r.room.name === room_name);
 		if (game) return game;
 		let room = this.wait_rooms.find(r => r.name === room_name);
 		if (!room) {
@@ -57,7 +57,7 @@ class RoomMenu {
 
 	change_to_room(client, room_name, user_name) {
 		console.log("Switching to room " + room_name + " with name " + user_name);
-		let game = this.get_game(room_name);
+		const game = this.get_game(room_name);
 		if (game instanceof GameLogic) {
 			client.game = game;
 			game.add_player(client.id, user_name);

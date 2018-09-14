@@ -2,7 +2,7 @@
 
 const io = require("socket.io-client");
 
-let socket = io();
+const socket = io();
 
 console.log("my socket is " + socket.sessionid);
 
@@ -12,11 +12,10 @@ const RoomGS = require("../client/gamestates/RoomGamestate");
 const WaitRoom = require("../client/gamestates/WaitRoom");
 
 window.addEventListener("load", function() {
-	let game_loop;
 	let last_time = 0;
-	game_loop = function(time) {
+	const game_loop = function(time) {
 		window.requestAnimationFrame(game_loop);
-		let dt = (time - last_time) / 1000;
+		const dt = (time - last_time) / 1000;
 		last_time = time;
 		GamestateManager.process(dt);
 	};

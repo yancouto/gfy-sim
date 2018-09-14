@@ -14,7 +14,7 @@ for (const name of ["laugh", "tongue", "me", "you"])
 	list[name] = "assets/stickers/" + name + ".png";
 
 // Creating Images for the stickers
-for (let name in list) {
+for (const name in list) {
 	const img = new Image();
 	img.src = list[name];
 	list[name] = img;

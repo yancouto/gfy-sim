@@ -19,7 +19,7 @@ class GameLogic {
 		this.can_swap_rules = false; // used for J
 		this.first_card_to_swap = null; // used for J
 		this.effect = {};
-		for (let c of "23456789TJQKA") this.effect[c] = c;
+		for (const c of "23456789TJQKA") this.effect[c] = c;
 		this.event_list = [];
 		this.last_winner = last_winner;
 		this.win_streak = win_streak || 0;
@@ -30,7 +30,7 @@ class GameLogic {
 			user_name,
 			this.room.player_list.map(pi => pi.name)
 		);
-		let pi = this.room.add_player(pid, user_name);
+		const pi = this.room.add_player(pid, user_name);
 		for (let i = 0; i < INITIAL_HAND_SIZE; i++)
 			pi.hand.push(this.get_next_card());
 		pi.sort_hand();
@@ -38,7 +38,7 @@ class GameLogic {
 	}
 
 	rem_player(pid) {
-		let i = this.room.player_list.findIndex(p => p.pid === pid);
+		const i = this.room.player_list.findIndex(p => p.pid === pid);
 		this.room.rem_player(pid);
 		if (this.room.player_list.length === 0) this.room.turn_i = null;
 		else if (this.room.turn_i === i)
@@ -47,8 +47,8 @@ class GameLogic {
 	}
 
 	get_data(pid) {
-		let pi = this.room.player_list.find(p => p.pid === pid);
-		let new_events = [];
+		const pi = this.room.player_list.find(p => p.pid === pid);
+		const new_events = [];
 		for (
 			let i = this.event_list.length - 1;
 			i >= 0 && this.event_list[i].timestamp >= pi.last_timestamp;
@@ -99,8 +99,8 @@ class GameLogic {
 
 	can_play(i, card) {
 		const r = this.room;
-		let top = r.played_cards[r.played_cards.length - 1];
-		let nxt =
+		const top = r.played_cards[r.played_cards.length - 1];
+		const nxt =
 			r.played_cards.length > 1
 				? r.played_cards[r.played_cards.length - 2]
 				: null;
@@ -120,7 +120,7 @@ class GameLogic {
 		// 10 rule
 		if (this.effect[card[0]] === "T" && nxt !== null) {
 			let sum = 0;
-			for (let c of top[0] + nxt[0]) {
+			for (const c of top[0] + nxt[0]) {
 				if (c === "5" && this.effect["5"] !== "5") sum = 1000;
 				if (this.effect[c] === "5") sum += 5;
 				// parseInt will return NaN on non-number, and work
@@ -155,6 +155,7 @@ class GameLogic {
 			// 7 --- next player draws two, stacks
 			if (this.effect[c[0]] === "7") r.must_draw = r.must_draw + 2;
 			else this.flush_7();
+
 			r.current_suit = null;
 			// 8 --- can change suit
 			this.can_change_suit = this.effect[c[0]] === "8" ? pi.pid : false;
@@ -162,7 +163,7 @@ class GameLogic {
 			// J --- can swap rules
 			if (this.effect[c[0]] === "J") {
 				// reset swap rules
-				for (let c of "23456789TJQKA") this.effect[c] = c;
+				for (const c of "23456789TJQKA") this.effect[c] = c;
 				this.can_swap_rules = pi.pid;
 				this.first_card_to_swap = null;
 			} else this.can_swap_rules = false;

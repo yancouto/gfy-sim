@@ -14,7 +14,7 @@ class StickerPanel extends Drawable {
 	}
 
 	update(dt) {
-		for (let s of this.stickers) s.update(dt);
+		for (const s of this.stickers) s.update(dt);
 	}
 
 	can_draw(size, border, w, h) {
@@ -49,7 +49,7 @@ class StickerPanel extends Drawable {
 
 	get_clicked_sticker(x, y) {
 		// Do this using division and part of the code in draw, if efficiency is needed. It is probably not.
-		let s = this.stickers.find(s => s.is_inside(x, y));
+		const s = this.stickers.find(s => s.is_inside(x, y));
 		if (s) return s.name;
 		return undefined;
 	}

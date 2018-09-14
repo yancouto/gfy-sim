@@ -35,7 +35,7 @@ class Room {
 	}
 
 	add_player(pid, name) {
-		let pi = new PlayerInfo(pid, name);
+		const pi = new PlayerInfo(pid, name);
 		this.player_list.push(pi);
 		return pi;
 	}

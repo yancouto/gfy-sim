@@ -30,7 +30,7 @@ class Room {
 	this_turn_or_mixed(i) {
 		return (
 			this.turn_i === i ||
-			(this.mixed_turn && this.clamp_to_players(i - 1) === this.turn_i)
+			(this.mixed_turn && this.clamp_to_players(i - this.dir) === this.turn_i)
 		);
 	}
 

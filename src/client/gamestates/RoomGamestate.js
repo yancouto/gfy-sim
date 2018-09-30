@@ -114,8 +114,14 @@ class RoomGamestate extends Gamestate {
 
 			RU.set_font(12);
 			if (ctx.measureText(pi.name).width > w)
-				RU.set_font(12 * w / ctx.measureText(pi.name).width);
-			RU.draw_text_align(pi.name, x + w / 2, y + h + 5, RU.ALIGN_CENTER, RU.ALIGN_TOP);
+				RU.set_font((12 * w) / ctx.measureText(pi.name).width);
+			RU.draw_text_align(
+				pi.name,
+				x + w / 2,
+				y + h + 5,
+				RU.ALIGN_CENTER,
+				RU.ALIGN_TOP
+			);
 
 			if (this.drawables[pi.pid])
 				for (const k in this.drawables[pi.pid]) {

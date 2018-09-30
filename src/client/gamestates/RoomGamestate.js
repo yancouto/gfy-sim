@@ -30,6 +30,10 @@ class RoomGamestate extends Gamestate {
 		this.name = "Room";
 		this.background = new Image();
 		this.background.src = "assets/felt.jpg";
+		this.clockwise = new Image();
+		this.clockwise.src = "assets/clockwise.png";
+		this.counter_clockwise = new Image();
+		this.counter_clockwise.src = "assets/counterclockwise.png";
 
 		this.sticker_panel = new StickerPanel();
 	}
@@ -136,6 +140,15 @@ class RoomGamestate extends Gamestate {
 			RU.W * 0.3,
 			RU.H * 0.3,
 			this.room.seed
+		);
+
+		const clock_sc = Math.min((RU.W * 0.1) / 845, (RU.H * 0.1) / 768);
+		ctx.drawImage(
+			this.room.dir == 1 ? this.clockwise : this.counter_clockwise,
+			RU.W * 0.7,
+			RU.H * 0.4,
+			clock_sc * 845,
+			clock_sc * 768
 		);
 
 		CardDrawer.draw_stack(ctx, RU.W * 0.8, RU.H * 0.3, RU.W * 0.15, RU.H * 0.3);

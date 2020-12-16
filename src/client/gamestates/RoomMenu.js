@@ -86,7 +86,7 @@ class RoomMenu extends Gamestate {
 		const user_name = this.name_frm.children[1].value;
 		const room_name = this.room_frm.children[0].value;
 		if (
-			/^\w{2,20}$/.test(room_name) &&
+			/^\w{1,20}$/.test(room_name) &&
 			user_name.length >= 1 &&
 			user_name.indexOf(",") == -1 &&
 			user_name.length <= 100

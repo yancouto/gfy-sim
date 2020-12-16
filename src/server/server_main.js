@@ -8,6 +8,10 @@ import { v4 as uuid4 } from "uuid";
 
 const PORT = process.env.PORT || 3000;
 
+process.on("uncaughtException", (err) => {
+	console.log("UNCAUGHT EXCEPTION - keeping process alive:", err);
+});
+
 const KEY = "player_id";
 
 const server = express();

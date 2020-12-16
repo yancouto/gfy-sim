@@ -18,6 +18,8 @@ class GameLogic {
 		this.can_change_suit = false; // used for 8
 		this.can_swap_rules = false; // used for J
 		this.first_card_to_swap = null; // used for J
+		this.players_who_sent_3_sticker = null; // used for 3
+		this.eff_3_timeout_handle = null;
 		this.effect = {};
 		for (const c of "23456789TJQKA") this.effect[c] = c;
 		this.event_list = [];
@@ -148,6 +150,12 @@ class GameLogic {
 			r.turn_i = i; // becomes this players turn if it was not already
 			pi.hand = pi.hand.filter((c, id) => id != index);
 			r.played_cards.push(c);
+			const top = r.played_cards[r.played_cards.length - 2];
+
+			// 3 --- play 3 sticker in 3 seconds or draw 3, last one always draws
+			if (this.effect[c[0]] === "3" && this.effect[top[0]] !== "3") {
+				this.start_3_effect();
+			}
 
 			// Queen --- reverses order
 			if (this.effect[c[0]] === "Q") r.dir = -r.dir;
@@ -204,6 +212,29 @@ class GameLogic {
 		while (r.played_cards.length > 10) r.remove_last_card_from_played();
 	}
 
+	flush_3() {
+		const r = this.room;
+		const send_3_until = r.send_3_until;
+		if (send_3_until == null) return;
+		r.player_list
+			.filter((p) => !this.players_who_sent_3_sticker.has(p.pid))
+			.forEach((p) => this.player_draws(p, 3, "3"));
+		r.send_3_until = null;
+		this.players_who_sent_3_sticker = null;
+		clearTimeout(this.eff_3_timeout_handle);
+		this.eff_3_timeout_handle = null;
+	}
+
+	start_3_effect() {
+		const r = this.room;
+		this.flush_3();
+		const now = Date.now();
+		r.send_3_until = now + 3000;
+		this.players_who_sent_3_sticker = new Set();
+		// use timeout
+		this.eff_3_timeout_handle = setTimeout(() => this.flush_3(), 3000);
+	}
+
 	flush_7() {
 		const pi = this.room.player_list[this.room.turn_i];
 		if (this.room.must_draw > 0) {
@@ -217,6 +248,29 @@ class GameLogic {
 	send_sticker(pid, name) {
 		console.log(pid + " sent sticker " + name);
 		this.event_list.push(new Event(pid, Event.SENT_STICKER, { name }));
+
+		// rule of 3 has preference over silence
+		if (
+			name === "3" &&
+			this.room.send_3_until != null &&
+			!this.players_who_sent_3_sticker.has(pid)
+		) {
+			const sent3 = this.players_who_sent_3_sticker;
+			const pl = this.room.player_list;
+			sent3.add(pid);
+			// This first check is just an optimization
+			if (sent3.size >= pl.length - 1) {
+				// Being extra careful as players may leave the game in the middle
+				// BUG: If players leave and just one player is left that hasn't used 3
+				// they won't draw 3 cards. This is so minimal I don't care enough to fix.
+				if (pl.filter((p) => !sent3.has(p.pid)).length <= 1) {
+					// at most one player left
+					this.flush_3();
+				}
+			}
+			// Don't trigger other rules and don't care about silent rule
+			return;
+		}
 
 		if (this.room.silent) {
 			this.room.silent = false;

@@ -140,6 +140,21 @@ class RoomGamestate extends Gamestate {
 			false,
 			get_hand_color(this.room, m_i)
 		);
+		if (
+			this.room.send_3_until != null &&
+			this.room.send_3_until >= Date.now()
+		) {
+			const time_left = ((this.room.send_3_until - Date.now()) / 1000).toFixed(
+				2
+			);
+			RU.draw_text_align(
+				`Send 3 sticker in ${time_left}s`,
+				(RU.W * (0.1 + 0.8)) / 2,
+				RU.H * 0.7 - 15,
+				RU.ALIGN_CENTER,
+				RU.ALIGN_BOTTOM
+			);
+		}
 
 		CardDrawer.draw_played_cards(
 			ctx,
@@ -186,7 +201,7 @@ class RoomGamestate extends Gamestate {
 		console.log("Got event " + ev.type + " from " + ev.source);
 		let drawable = null;
 		const color = [0, 0, 0];
-		const timeout = 2;
+		let timeout = 3;
 		if (ev.type === Event.SENT_STICKER) {
 			drawable = new CenteredImage(StickerList[ev.info.name], 50);
 		} else if (ev.type === Event.DRAW) {
@@ -195,6 +210,7 @@ class RoomGamestate extends Gamestate {
 				text = "Broke Silence Rule (+" + ev.info.draw_count + ")";
 			else if (ev.info.reason === "stack")
 				text = "Draw " + ev.info.draw_count + " from stack";
+			else if (ev.info.reason === "3") text = "Drawing for rule of 3";
 			else text = "Draw " + ev.info.draw_count;
 			drawable = new CenteredText(text);
 		} else if (ev.type === Event.EFF_7) {
@@ -203,6 +219,7 @@ class RoomGamestate extends Gamestate {
 			drawable = new CenteredText(
 				"Swapped " + ev.info.card_a + " and " + ev.info.card_b
 			);
+			timeout = 5;
 		} else if (ev.type === Event.EFF_8) {
 			drawable = new CenteredText("Changed suit to " + ev.info.new_suit);
 		} else if (ev.type === Event.EFF_6) {

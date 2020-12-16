@@ -18,6 +18,9 @@ class Room {
 		this.dir = +1;
 		this.must_draw = 0; // used for 7
 		this.current_suit = null; // used for 8
+		// used for 3. Players need to send a 3 until this timestamp
+		// or draw 3 cards. In milliseconds since epoch
+		this.send_3_until = null;
 	}
 
 	clamp_to_players(i) {

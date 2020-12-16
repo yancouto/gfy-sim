@@ -1,22 +1,21 @@
 // Helper to draw cards on the screen
-"use strict";
-const CardDrawer = (module.exports = {});
+const CardDrawer = {};
 
-const Utils = require("../common/Utils");
-const PRNG = require("../external/PRNG");
+import { point_in_rect } from "../common/Utils";
+import PRNG from "../external/PRNG";
 const random = new PRNG(12);
 
-const ClassicDeck = require("../client/decks/ClassicDeck"); // eslint-disable-line no-unused-vars
-const SimianDeck = require("../client/decks/SimianDeck"); // eslint-disable-line no-unused-vars
+import ClassicDeck from "../client/decks/ClassicDeck"; // eslint-disable-line no-unused-vars
+import SimianDeck from "../client/decks/SimianDeck"; // eslint-disable-line no-unused-vars
 
 const deck = SimianDeck;
 
-CardDrawer.fix_size = function(w, h) {
+CardDrawer.fix_size = function (w, h) {
 	const sc = Math.min(w ? w / deck.cw : 1, h ? h / deck.ch : 1);
 	return [deck.cw * sc, deck.ch * sc];
 };
 
-CardDrawer.draw_card = function(ctx, card, x, y, w, h, hide, border_color) {
+CardDrawer.draw_card = function (ctx, card, x, y, w, h, hide, border_color) {
 	const sc = Math.min(w ? w / deck.cw : 1, h ? h / deck.ch : 1);
 	if (hide) deck.draw_back(ctx, x, y, deck.cw * sc, deck.ch * sc);
 	else deck.draw_card(ctx, card, x, y, deck.cw * sc, deck.ch * sc);
@@ -66,7 +65,7 @@ let last_draw = null;
 let stack_last_draw = null;
 
 // Draws hand inside the rectangle area given by (x, y, w, h)
-CardDrawer.draw_hand_horizontal = function(
+CardDrawer.draw_hand_horizontal = function (
 	ctx,
 	hand,
 	x,
@@ -93,19 +92,19 @@ CardDrawer.draw_hand_horizontal = function(
 		);
 };
 
-CardDrawer.get_clicked_card = function(xc, yc) {
+CardDrawer.get_clicked_card = function (xc, yc) {
 	if (stack_last_draw) {
 		const [xs, ys, ws, hs] = stack_last_draw;
-		if (Utils.point_in_rect(xc, yc, xs, ys, ws, hs)) return -2;
+		if (point_in_rect(xc, yc, xs, ys, ws, hs)) return -2;
 	}
 	if (!last_draw) return -1;
 	const rev_cards = [...get_positions(...last_draw)].reverse();
 	for (const [i, x, y, w, h] of rev_cards)
-		if (Utils.point_in_rect(xc, yc, x, y, w, h)) return i;
+		if (point_in_rect(xc, yc, x, y, w, h)) return i;
 	return -1;
 };
 
-CardDrawer.draw_played_cards = function(ctx, cards, x, y, w, h, seed) {
+CardDrawer.draw_played_cards = function (ctx, cards, x, y, w, h, seed) {
 	const sq2 = Math.sqrt(2);
 	const [cw, ch] = CardDrawer.fix_size(w / sq2, h / sq2);
 	ctx.save();
@@ -129,7 +128,7 @@ CardDrawer.draw_played_cards = function(ctx, cards, x, y, w, h, seed) {
 	ctx.restore();
 };
 
-CardDrawer.draw_stack = function(ctx, x, y, w, h) {
+CardDrawer.draw_stack = function (ctx, x, y, w, h) {
 	const n = 13;
 	const [cw, ch] = CardDrawer.fix_size(w * 0.8, h * 0.95);
 	const dw = (cw * (0.2 / 0.8)) / (n - 1);
@@ -149,3 +148,5 @@ CardDrawer.draw_stack = function(ctx, x, y, w, h) {
 		);
 	stack_last_draw = [x + ow, y + oh, dw * (n - 1) + cw, dh * (n - 1) + ch];
 };
+
+export default CardDrawer;

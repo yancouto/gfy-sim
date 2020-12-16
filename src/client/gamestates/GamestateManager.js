@@ -1,6 +1,6 @@
 // Manages current gamestate and switching
-"use strict";
-const RenderUtils = require("../../client/RenderUtils");
+
+import RenderUtils from "../../client/RenderUtils";
 
 class GamestateManager {
 	constructor() {
@@ -50,6 +50,4 @@ class GamestateManager {
 }
 
 // main GamestateManager
-GamestateManager.GM = new GamestateManager();
-
-module.exports = GamestateManager;
+export const GM = new GamestateManager();

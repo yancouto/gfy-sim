@@ -1,5 +1,3 @@
-"use strict";
-
 class Client {
 	constructor(socket) {
 		this.socket = socket;
@@ -17,4 +15,4 @@ class Client {
 	}
 }
 
-module.exports = Client;
+export default Client;

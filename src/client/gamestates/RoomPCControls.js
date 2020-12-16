@@ -1,8 +1,6 @@
-"use strict";
-
-const GamestateManager = require("./GamestateManager").GM;
-const CardDrawer = require("../../client/CardDrawer");
-const RU = require("../../client/RenderUtils");
+import { GM as GamestateManager } from "../gamestates/GamestateManager";
+import CardDrawer from "../../client/CardDrawer";
+import RU from "../../client/RenderUtils";
 
 class RoomPCControls {
 	constructor(input_handler) {
@@ -36,4 +34,4 @@ class RoomPCControls {
 	}
 }
 
-module.exports = RoomPCControls;
+export default RoomPCControls;

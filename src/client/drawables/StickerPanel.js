@@ -1,9 +1,8 @@
 // Draws a bunch of square stickers
-"use strict";
 
-const Drawable = require("./Drawable");
-const Sticker = require("./ClickableSticker");
-const StickerList = require("./StickerList");
+import Drawable from "./Drawable";
+import Sticker from "./ClickableSticker";
+import StickerList from "./StickerList";
 
 class StickerPanel extends Drawable {
 	constructor() {
@@ -49,10 +48,10 @@ class StickerPanel extends Drawable {
 
 	get_clicked_sticker(x, y) {
 		// Do this using division and part of the code in draw, if efficiency is needed. It is probably not.
-		const s = this.stickers.find(s => s.is_inside(x, y));
+		const s = this.stickers.find((s) => s.is_inside(x, y));
 		if (s) return s.name;
 		return undefined;
 	}
 }
 
-module.exports = StickerPanel;
+export default StickerPanel;

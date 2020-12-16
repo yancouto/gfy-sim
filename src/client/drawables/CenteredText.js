@@ -1,8 +1,7 @@
 // Simple text
-"use strict";
 
-const Drawable = require("./Drawable");
-const RU = require("../../client/RenderUtils");
+import Drawable from "./Drawable";
+import RU from "../../client/RenderUtils";
 
 class CenteredText extends Drawable {
 	constructor(text) {
@@ -21,4 +20,4 @@ class CenteredText extends Drawable {
 	}
 }
 
-module.exports = CenteredText;
+export default CenteredText;

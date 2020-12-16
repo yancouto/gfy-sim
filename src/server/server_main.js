@@ -1,10 +1,8 @@
-"use strict";
-
-const express = require("express");
-const socketIO = require("socket.io");
-const path = require("path");
-const Utils = require("../common/Utils");
-const ClientManager = require("../server/ClientManager").CM;
+import express from "express";
+import socketIO from "socket.io";
+import path from "path";
+import * as Utils from "../common/Utils";
+import { CM as ClientManager } from "../server/ClientManager";
 
 const PORT = process.env.PORT || 3000;
 

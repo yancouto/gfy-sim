@@ -1,11 +1,11 @@
 // Handles all server game logic for a single game
-"use strict";
 
-const Room = require("../common/Room");
-const Event = require("../common/Event");
-const Utils = require("../common/Utils");
+import Room from "../common/Room";
+import Event from "../common/Event";
+import * as Utils from "../common/Utils";
+import WaitRoom from "../server/WaitRoom";
 
-const now = require("performance-now");
+import now from "performance-now";
 
 const INITIAL_HAND_SIZE = 7;
 
@@ -28,7 +28,7 @@ class GameLogic {
 	add_player(pid, user_name) {
 		user_name = Utils.avoid_duplicate_name(
 			user_name,
-			this.room.player_list.map(pi => pi.name)
+			this.room.player_list.map((pi) => pi.name)
 		);
 		const pi = this.room.add_player(pid, user_name);
 		for (let i = 0; i < INITIAL_HAND_SIZE; i++)
@@ -38,7 +38,7 @@ class GameLogic {
 	}
 
 	rem_player(pid) {
-		const i = this.room.player_list.findIndex(p => p.pid === pid);
+		const i = this.room.player_list.findIndex((p) => p.pid === pid);
 		this.room.rem_player(pid);
 		if (this.room.player_list.length === 0) this.room.turn_i = null;
 		else if (this.room.turn_i === i)
@@ -47,7 +47,7 @@ class GameLogic {
 	}
 
 	get_data(pid) {
-		const pi = this.room.player_list.find(p => p.pid === pid);
+		const pi = this.room.player_list.find((p) => p.pid === pid);
 		const new_events = [];
 		for (
 			let i = this.event_list.length - 1;
@@ -68,8 +68,7 @@ class GameLogic {
 	won(winner_pi) {
 		console.log(winner_pi.name + " won!");
 		const RoomMenu = require("../server/RoomMenu").RM;
-		RoomMenu.game_list = RoomMenu.game_list.filter(g => g !== this);
-		const WaitRoom = require("../server/WaitRoom");
+		RoomMenu.game_list = RoomMenu.game_list.filter((g) => g !== this);
 		const wait_room = new WaitRoom(
 			this.room.name,
 			winner_pi.name,
@@ -134,7 +133,7 @@ class GameLogic {
 	// player with pid pid played the card with index index from his hand
 	play_card(pid, index) {
 		const r = this.room;
-		const i = r.player_list.findIndex(p => p.pid === pid);
+		const i = r.player_list.findIndex((p) => p.pid === pid);
 		const pi = r.player_list[i];
 		const c = pi.hand[index];
 		if (pi.last_play_6 > now() - 5000 && pi.hand.length > 1) {
@@ -221,7 +220,11 @@ class GameLogic {
 
 		if (this.room.silent) {
 			this.room.silent = false;
-			this.player_draws(this.room.player_list.find(p => p.pid === pid), 4, "4");
+			this.player_draws(
+				this.room.player_list.find((p) => p.pid === pid),
+				4,
+				"4"
+			);
 		}
 
 		// changing the suit -- 8 RULE
@@ -245,7 +248,7 @@ class GameLogic {
 
 		// calling "I have one"
 		if (name === "me") {
-			const pi = this.room.player_list.find(p => p.pid === pid);
+			const pi = this.room.player_list.find((p) => p.pid === pid);
 			if (pi.hand.length === 1) pi.can_have_one = true;
 		}
 
@@ -258,7 +261,7 @@ class GameLogic {
 	}
 
 	draw_from_stack(pid) {
-		const i = this.room.player_list.findIndex(p => p.pid === pid);
+		const i = this.room.player_list.findIndex((p) => p.pid === pid);
 		const pi = this.room.player_list[i];
 		if (this.room.turn_i !== i) {
 			this.player_draws(pi, 2, "GFY");
@@ -295,9 +298,9 @@ class GameLogic {
 	player_draws(pi, draw_count, reason) {
 		for (let i = 0; i < draw_count; i++) pi.add_to_hand(this.get_next_card());
 		this.event_list.push(new Event(pi.pid, Event.DRAW, { draw_count, reason }));
-		const i = this.room.player_list.findIndex(p => p === pi);
+		const i = this.room.player_list.findIndex((p) => p === pi);
 		if (this.room.turn_i === i) this.room.mixed_turn = true;
 	}
 }
 
-module.exports = GameLogic;
+export default GameLogic;

@@ -1,8 +1,7 @@
 // Handles input for the RoomGamestate
-"use strict";
 
-const PCControls = require("./RoomPCControls");
-const Utils = require("../../common/Utils");
+import PCControls from "./RoomPCControls";
+import * as Utils from "../../common/Utils";
 
 class RoomInputHandler {
 	constructor() {
@@ -29,4 +28,4 @@ class RoomInputHandler {
 	}
 }
 
-module.exports = RoomInputHandler;
+export default RoomInputHandler;

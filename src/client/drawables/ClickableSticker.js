@@ -1,9 +1,8 @@
 // Image that can be clicked (and records last position)
-"use strict";
 
-const Drawable = require("./Drawable");
-const Util = require("../../common/Utils");
-const StickerList = require("./StickerList");
+import Drawable from "./Drawable";
+import * as Util from "../../common/Utils";
+import StickerList from "./StickerList";
 
 class ClickableSticker extends Drawable {
 	constructor(name) {
@@ -25,4 +24,4 @@ class ClickableSticker extends Drawable {
 	}
 }
 
-module.exports = ClickableSticker;
+export default ClickableSticker;

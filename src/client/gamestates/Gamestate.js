@@ -1,5 +1,4 @@
 /* A gamestate is a client game state, it updates and draws, and should be self-contained, like a menu, or a credits screen. */
-"use strict";
 
 class Gamestate {
 	constructor() {
@@ -19,4 +18,4 @@ class Gamestate {
 	wrong_data(data) {} // eslint-disable-line no-unused-vars
 }
 
-module.exports = Gamestate;
+export default Gamestate;

@@ -1,10 +1,9 @@
 // Manages room list
-"use strict";
 
-const GameLogic = require("../server/GameLogic");
-const WaitRoom = require("../server/WaitRoom");
+import GameLogic from "../server/GameLogic";
+import WaitRoom from "../server/WaitRoom";
 
-class RoomMenu {
+export class RoomMenu {
 	constructor() {
 		this.game_list = [];
 		this.wait_rooms = [];
@@ -18,8 +17,8 @@ class RoomMenu {
 			data = client.game.get_data(client.id);
 		} else
 			data = {
-				room_list: Array.from(this.game_list, r => r.room.name).concat(
-					Array.from(this.wait_rooms, w => w.name)
+				room_list: Array.from(this.game_list, (r) => r.room.name).concat(
+					Array.from(this.wait_rooms, (w) => w.name)
 				),
 				name: "RoomMenu",
 			};
@@ -27,9 +26,9 @@ class RoomMenu {
 	}
 
 	get_game(room_name) {
-		const game = this.game_list.find(r => r.room.name === room_name);
+		const game = this.game_list.find((r) => r.room.name === room_name);
 		if (game) return game;
-		let room = this.wait_rooms.find(r => r.name === room_name);
+		let room = this.wait_rooms.find((r) => r.name === room_name);
 		if (!room) {
 			room = new WaitRoom(room_name);
 			this.wait_rooms.push(room);
@@ -42,14 +41,14 @@ class RoomMenu {
 			console.log("Exiting game room " + client.game.room.name);
 			client.game.rem_player(client.id);
 			this.game_list = this.game_list.filter(
-				w => w.room.player_list.length > 0
+				(w) => w.room.player_list.length > 0
 			);
 			client.game = null;
 			client.socket.emit("switch gamestate", "RoomMenu");
 		} else if (client.wait_room) {
 			console.log("Exiting wait room " + client.wait_room.name);
 			client.wait_room.rem_player(client);
-			this.wait_rooms = this.wait_rooms.filter(w => w.player_list.length > 0);
+			this.wait_rooms = this.wait_rooms.filter((w) => w.player_list.length > 0);
 			client.wait_room = null;
 			client.socket.emit("switch gamestate", "RoomMenu");
 		} else console.warn("quit_room on client without room");
@@ -71,6 +70,4 @@ class RoomMenu {
 }
 
 // main RoomMenu
-RoomMenu.RM = new RoomMenu();
-
-module.exports = RoomMenu;
+export const RM = new RoomMenu();

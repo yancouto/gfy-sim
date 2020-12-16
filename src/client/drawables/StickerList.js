@@ -1,6 +1,4 @@
-"use strict";
-
-const list = (module.exports = {});
+const list = {};
 
 // Suits
 for (const suit of "CDSH") list[suit] = "assets/stickers/" + suit + ".png";
@@ -19,3 +17,5 @@ for (const name in list) {
 	img.src = list[name];
 	list[name] = img;
 }
+
+export default list;

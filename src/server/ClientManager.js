@@ -1,9 +1,7 @@
-"use strict";
+import Client from "../server/Client";
+import { RM as RoomMenu } from "../server/RoomMenu";
 
-const Client = require("../server/Client");
-const RoomMenu = require("../server/RoomMenu").RM;
-
-class ClientManager {
+export class ClientManager {
 	constructor() {
 		this.id_to_client = new Map();
 	}
@@ -19,8 +17,8 @@ class ClientManager {
 		socket.on("change room", (to, user_name) =>
 			self.change_room(c, to, user_name)
 		);
-		socket.on("play card", index => self.play_card(c, index));
-		socket.on("send sticker", name => self.send_sticker(c, name));
+		socket.on("play card", (index) => self.play_card(c, index));
+		socket.on("send sticker", (name) => self.send_sticker(c, name));
 		socket.on("i will start", () => self.i_will_start(c));
 		socket.on("i am ready", () => self.i_am_ready(c));
 		socket.on("draw from stack", () => self.draw_from_stack(c));
@@ -70,6 +68,4 @@ class ClientManager {
 }
 
 // Main client manager
-ClientManager.CM = new ClientManager();
-
-module.exports = ClientManager;
+export const CM = new ClientManager();

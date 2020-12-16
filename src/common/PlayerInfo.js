@@ -1,7 +1,6 @@
 // Stores hand and other necessary info
-"use strict";
 
-const now = require("performance-now");
+import now from "performance-now";
 
 const value = {};
 for (let i = 0; i < 13; i++) value["23456789TJQKA"[i]] = i;
@@ -40,4 +39,4 @@ class PlayerInfo {
 	}
 }
 
-module.exports = PlayerInfo;
+export default PlayerInfo;

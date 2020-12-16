@@ -1,6 +1,4 @@
-"use strict";
-
-const Utils = require("../common/Utils.js");
+import * as Utils from "../common/Utils.js";
 
 class Client {
 	constructor(client, user_name) {
@@ -10,7 +8,7 @@ class Client {
 	}
 }
 
-const GameLogic = require("../server/GameLogic");
+import GameLogic from "../server/GameLogic";
 
 class WaitRoom {
 	constructor(name, last_winner, win_streak) {
@@ -24,15 +22,15 @@ class WaitRoom {
 	add_player(client, user_name) {
 		user_name = Utils.avoid_duplicate_name(
 			user_name,
-			this.player_list.map(p => p.user_name)
+			this.player_list.map((p) => p.user_name)
 		);
 		this.player_list.push(new Client(client, user_name));
 	}
 
 	rem_player(client) {
-		const i = this.player_list.findIndex(p => p.client === client);
+		const i = this.player_list.findIndex((p) => p.client === client);
 		if (i === -1) return;
-		this.player_list = this.player_list.filter(p => p.client !== client);
+		this.player_list = this.player_list.filter((p) => p.client !== client);
 		if (i === this.start_i) this.start_i = null;
 		this.check_done();
 	}
@@ -42,12 +40,12 @@ class WaitRoom {
 			name: "WaitRoom",
 			room_name: this.name,
 			start_i: this.start_i,
-			players: this.player_list.map(p => ({
+			players: this.player_list.map((p) => ({
 				confirmed: p.confirmed,
 				name: p.user_name,
 			})),
-			confirmed: this.player_list.find(p => p.client === client).confirmed,
-			my_name: this.player_list.find(p => p.client === client).user_name,
+			confirmed: this.player_list.find((p) => p.client === client).confirmed,
+			my_name: this.player_list.find((p) => p.client === client).user_name,
 			last_winner: this.last_winner,
 			win_streak: this.win_streak,
 		};
@@ -58,10 +56,10 @@ class WaitRoom {
 		if (
 			this.start_i !== null &&
 			this.player_list.length > 1 &&
-			this.player_list.findIndex(p => !p.confirmed) === -1
+			this.player_list.findIndex((p) => !p.confirmed) === -1
 		) {
 			const RoomMenu = require("../server/RoomMenu").RM;
-			RoomMenu.wait_rooms = RoomMenu.wait_rooms.filter(w => w !== this);
+			RoomMenu.wait_rooms = RoomMenu.wait_rooms.filter((w) => w !== this);
 			const game = new GameLogic(this.name, this.last_winner, this.win_streak);
 			for (const p of this.player_list) {
 				p.client.game = game;
@@ -77,15 +75,15 @@ class WaitRoom {
 	// Client declared he will start first
 	i_will_start(client) {
 		if (this.start_i === null)
-			this.start_i = this.player_list.findIndex(p => p.client === client);
+			this.start_i = this.player_list.findIndex((p) => p.client === client);
 		this.check_done();
 	}
 
 	// Client declared to be ready
 	i_am_ready(client) {
-		this.player_list.find(p => p.client === client).confirmed = true;
+		this.player_list.find((p) => p.client === client).confirmed = true;
 		this.check_done();
 	}
 }
 
-module.exports = WaitRoom;
+export default WaitRoom;

@@ -1,6 +1,4 @@
-"use strict";
-
-const now = require("performance-now");
+import now from "performance-now";
 
 class Event {
 	constructor(source, type, info) {
@@ -20,4 +18,4 @@ Object.assign(Event, {
 	EFF_6: 5, // Player receives card from previous player
 });
 
-module.exports = Event;
+export default Event;

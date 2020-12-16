@@ -1,8 +1,6 @@
-"use strict";
-
-const Gamestate = require("./Gamestate");
-const RU = require("../../client/RenderUtils");
-const Utils = require("../../common/Utils");
+import Gamestate from "./Gamestate";
+import RU from "../../client/RenderUtils";
+import * as Utils from "../../common/Utils";
 
 class WaitRoom extends Gamestate {
 	constructor() {
@@ -84,8 +82,8 @@ class WaitRoom extends Gamestate {
 		RU.draw_text_align(
 			"Ready: " +
 				this.players
-					.filter(p => p.confirmed)
-					.map(p => p.name)
+					.filter((p) => p.confirmed)
+					.map((p) => p.name)
 					.join(", "),
 			W / 2,
 			H * 0.6,
@@ -95,8 +93,8 @@ class WaitRoom extends Gamestate {
 		RU.draw_text_align(
 			"Not Ready: " +
 				this.players
-					.filter(p => !p.confirmed)
-					.map(p => p.name)
+					.filter((p) => !p.confirmed)
+					.map((p) => p.name)
 					.join(", "),
 			W / 2,
 			H * 0.7,
@@ -140,4 +138,4 @@ class WaitRoom extends Gamestate {
 	}
 }
 
-module.exports = WaitRoom;
+export default WaitRoom;

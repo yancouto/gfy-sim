@@ -1,7 +1,6 @@
 // Generates random names
-"use strict";
 
-const NameGenerator = (module.exports = {});
+const NameGenerator = {};
 
 const name_list = [
 	"Aardwolf",
@@ -2942,6 +2941,8 @@ const name_list = [
 	"Zzzax",
 ];
 
-NameGenerator.get_random_name = function() {
+NameGenerator.get_random_name = function () {
 	return name_list[Math.floor(Math.random() * name_list.length)];
 };
+
+export default NameGenerator;

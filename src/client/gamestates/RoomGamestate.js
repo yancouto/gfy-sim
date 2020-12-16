@@ -1,20 +1,18 @@
-"use strict";
+import Gamestate from "./Gamestate";
+import RU from "../../client/RenderUtils";
+import * as Utils from "../../common/Utils";
+import Room from "../../common/Room";
+import CardDrawer from "../../client/CardDrawer";
+import RoomInputHandler from "./RoomInputHandler";
 
-const Gamestate = require("./Gamestate");
-const RU = require("../../client/RenderUtils");
-const Utils = require("../../common/Utils");
-const Room = require("../../common/Room");
-const CardDrawer = require("../../client/CardDrawer");
-const RoomInputHandler = require("./RoomInputHandler");
+import Event from "../../common/Event";
 
-const Event = require("../../common/Event");
+import CenteredImage from "../../client/drawables/CenteredImage";
+import CenteredText from "../../client/drawables/CenteredText";
+import DisappearingDrawable from "../../client/drawables/DisappearingDrawable";
 
-const CenteredImage = require("../../client/drawables/CenteredImage");
-const CenteredText = require("../../client/drawables/CenteredText");
-const DisappearingDrawable = require("../../client/drawables/DisappearingDrawable");
-
-const StickerPanel = require("../../client/drawables/StickerPanel");
-const StickerList = require("../../client/drawables/StickerList");
+import StickerPanel from "../../client/drawables/StickerPanel";
+import StickerList from "../../client/drawables/StickerList";
 
 function get_hand_color(room, turn) {
 	if (room.turn_i === turn) return "rgb(255, 0, 0)";
@@ -58,7 +56,7 @@ class RoomGamestate extends Gamestate {
 				d.update(dt);
 			}
 		for (const s in this.drawables)
-			this.drawables[s] = this.drawables[s].filter(d => !d.can_delete);
+			this.drawables[s] = this.drawables[s].filter((d) => !d.can_delete);
 	}
 
 	draw(ctx) {
@@ -80,7 +78,7 @@ class RoomGamestate extends Gamestate {
 			RU.draw_text_align("Loading...", RU.W / 2, RU.H / 2);
 			return;
 		}
-		const m_i = this.room.player_list.findIndex(p => p.pid === this.me.pid);
+		const m_i = this.room.player_list.findIndex((p) => p.pid === this.me.pid);
 
 		ctx.fillStyle = "rgb(255, 255, 255)";
 		RU.set_font(12);
@@ -220,9 +218,11 @@ class RoomGamestate extends Gamestate {
 
 	sync_to_server(data) {
 		this.room = Object.setPrototypeOf(data.room, Room.prototype);
-		this.me = this.room.player_list.find(p => p.pid == Utils.client_socket.id);
+		this.me = this.room.player_list.find(
+			(p) => p.pid == Utils.client_socket.id
+		);
 		for (const e of data.new_events) this.process_event(e);
 	}
 }
 
-module.exports = RoomGamestate;
+export default RoomGamestate;

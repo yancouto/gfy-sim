@@ -7,6 +7,7 @@ module.exports = {
     "plugins": ["prettier"],
     "extends": "prettier",
     "parserOptions": {
+        "sourceType": "module"
     },
     "rules": {
         "no-console": 0,

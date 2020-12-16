@@ -1,11 +1,11 @@
 // Gamestate for the room menu, where you can create or join a room.
-"use strict";
-const Gamestate = require("./Gamestate");
-const RenderUtils = require("../../client/RenderUtils");
-const GamestateManager = require("./GamestateManager").GM;
-const Utils = require("../../common/Utils");
-const WaitRoom = require("./WaitRoom");
-const NameGenerator = require("../../client/utils/NameGenerator");
+
+import Gamestate from "./Gamestate";
+import RenderUtils from "../../client/RenderUtils";
+import { GM as GamestateManager } from "../gamestates/GamestateManager";
+import * as Utils from "../../common/Utils";
+import WaitRoom from "./WaitRoom";
+import NameGenerator from "../../client/utils/NameGenerator";
 
 class RoomMenu extends Gamestate {
 	constructor() {
@@ -103,4 +103,4 @@ class RoomMenu extends Gamestate {
 	}
 }
 
-module.exports = RoomMenu;
+export default RoomMenu;

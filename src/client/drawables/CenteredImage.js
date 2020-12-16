@@ -1,7 +1,6 @@
 // Simple image
-"use strict";
 
-const Drawable = require("./Drawable");
+import Drawable from "./Drawable";
 
 class CenteredImage extends Drawable {
 	constructor(img, sz) {
@@ -20,4 +19,4 @@ class CenteredImage extends Drawable {
 	}
 }
 
-module.exports = CenteredImage;
+export default CenteredImage;

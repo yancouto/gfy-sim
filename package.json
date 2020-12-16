@@ -4,24 +4,34 @@
   "description": "Go Fuck Yourself Simulator",
   "main": "src/server/server_main.js",
   "engines": {
-    "node": "6.11.1"
+    "node": "14.5.1"
   },
   "dependencies": {
-    "express": "^4.14.0",
+    "core-js": "^3.8.1",
+    "express": "^4.17.1",
     "performance-now": "^2.1.0",
-    "socket.io": "^1.4.8",
-    "webpack": "^1.14.0"
+    "regenerator-runtime": "^0.13.7",
+    "socket.io": "^3.0.4",
+    "socket.io-client": "^3.0.4",
+    "webpack": "^5.10.3"
   },
   "devDependencies": {
-    "eslint": "^3.10.2",
-    "eslint-config-prettier": "^3.0.1",
-    "eslint-plugin-prettier": "^2.6.2",
-    "prettier": "1.14.2"
+    "@babel/cli": "^7.12.10",
+    "@babel/core": "^7.12.10",
+    "@babel/preset-env": "^7.12.10",
+    "@webpack-cli/migrate": "^1.1.0",
+    "babel-loader": "^8.2.2",
+    "eslint": "^7.15.0",
+    "eslint-config-prettier": "^7.0.0",
+    "eslint-plugin-prettier": "^3.3.0",
+    "prettier": "2.2.1",
+    "webpack-cli": "^4.2.0"
   },
   "scripts": {
-    "start": "node src/server/server_main.js",
-    "build": "webpack",
-    "lint": "eslint src/*/*.js src/*/*/*.js"
+    "start": "npm run build-server && node dist/server/server_main.js",
+    "build-server": "babel src -d dist",
+    "build-client": "webpack",
+    "lint": "eslint src"
   },
   "repository": {
     "type": "git",

@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * Creates a pseudo-random value generator. The seed must be an integer.
  *
@@ -14,16 +12,16 @@ function Random(seed) {
 /**
  * Returns a pseudo-random value between 1 and 2^32 - 2.
  */
-Random.prototype.nextInt = function() {
+Random.prototype.nextInt = function () {
 	return (this._seed = (this._seed * 16807) % 2147483647);
 };
 
 /**
  * Returns a pseudo-random floating point number in range [0, 1).
  */
-Random.prototype.nextFloat = function() {
+Random.prototype.nextFloat = function () {
 	// We know that result of next() will be 1 to 2147483646 (inclusive).
 	return (this.nextInt() - 1) / 2147483646;
 };
 
-module.exports = Random;
+export default Random;

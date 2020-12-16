@@ -1,19 +1,19 @@
-"use strict";
-
-const io = require("socket.io-client");
+import "core-js/stable";
+import "regenerator-runtime/runtime";
+import io from "socket.io-client";
 
 const socket = io();
 
 console.log("my socket is " + socket.sessionid);
 
-const GamestateManager = require("../client/gamestates/GamestateManager").GM;
-const RoomMenu = require("../client/gamestates/RoomMenu");
-const RoomGS = require("../client/gamestates/RoomGamestate");
-const WaitRoom = require("../client/gamestates/WaitRoom");
+import { GM as GamestateManager } from "./gamestates/GamestateManager";
+import RoomMenu from "../client/gamestates/RoomMenu";
+import RoomGS from "../client/gamestates/RoomGamestate";
+import WaitRoom from "../client/gamestates/WaitRoom";
 
-window.addEventListener("load", function() {
+window.addEventListener("load", function () {
 	let last_time = 0;
-	const game_loop = function(time) {
+	const game_loop = function (time) {
 		window.requestAnimationFrame(game_loop);
 		const dt = (time - last_time) / 1000;
 		last_time = time;
@@ -26,13 +26,13 @@ window.addEventListener("load", function() {
 
 socket.emit("request update");
 
-socket.on("update", function(data, do_not_request_more) {
+socket.on("update", function (data, do_not_request_more) {
 	GamestateManager.sync_data(data);
 	// is there reason to wait?
 	if (!do_not_request_more) socket.emit("request update");
 });
 
-socket.on("switch gamestate", function(name) {
+socket.on("switch gamestate", function (name) {
 	let gs = null;
 	if (name === "RoomMenu") gs = new RoomMenu();
 	else if (name === "Room") gs = new RoomGS();
@@ -41,5 +41,5 @@ socket.on("switch gamestate", function(name) {
 	if (gs !== null) GamestateManager.switch_to(gs);
 });
 
-const Utils = require("../common/Utils");
+import * as Utils from "../common/Utils";
 Utils.client_socket = socket;

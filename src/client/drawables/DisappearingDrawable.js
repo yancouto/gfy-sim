@@ -1,7 +1,6 @@
 // Drawable that gradually disappears
-"use strict";
 
-const Drawable = require("./Drawable");
+import Drawable from "./Drawable";
 
 class DisappearingDrawable extends Drawable {
 	constructor(drawable, color, timeout) {
@@ -33,4 +32,4 @@ class DisappearingDrawable extends Drawable {
 	}
 }
 
-module.exports = DisappearingDrawable;
+export default DisappearingDrawable;

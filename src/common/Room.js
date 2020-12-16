@@ -1,9 +1,8 @@
 /* Room where a GFY game is played
  * Only stores data common to client and server */
-"use strict";
 
-const PlayerInfo = require("../common/PlayerInfo");
-const PRNG = require("../external/PRNG");
+import PlayerInfo from "../common/PlayerInfo";
+import PRNG from "../external/PRNG";
 const random = new PRNG(Math.round(Math.random() * 1123123));
 
 class Room {
@@ -41,11 +40,11 @@ class Room {
 	}
 
 	rem_player(pid) {
-		this.player_list = this.player_list.filter(p => p.pid !== pid);
+		this.player_list = this.player_list.filter((p) => p.pid !== pid);
 	}
 
 	get_player_info(pid) {
-		return this.player_list.find(p => p.pid == pid);
+		return this.player_list.find((p) => p.pid == pid);
 	}
 
 	remove_last_card_from_played() {
@@ -56,4 +55,4 @@ class Room {
 	}
 }
 
-module.exports = Room;
+export default Room;

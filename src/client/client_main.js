@@ -4,7 +4,7 @@ import io from "socket.io-client";
 
 const socket = io();
 
-console.log("my socket is " + socket.sessionid);
+console.log("my socket is " + socket.id);
 
 import { GM as GamestateManager } from "./gamestates/GamestateManager";
 import RoomMenu from "../client/gamestates/RoomMenu";

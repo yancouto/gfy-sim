@@ -1,3 +1,4 @@
+import Cookies from "cookies";
 import Client from "../server/Client";
 import { RM as RoomMenu } from "../server/RoomMenu";
 
@@ -7,9 +8,9 @@ export class ClientManager {
 	}
 
 	add_client(socket) {
-		console.log("client connected " + socket.id);
 		const c = new Client(socket);
-		this.id_to_client.set(socket.id, c);
+		console.log("client connected " + c.id);
+		this.id_to_client.set(c.id, c);
 
 		const self = this;
 		socket.on("disconnect", () => self.rem_client(c));
@@ -25,9 +26,9 @@ export class ClientManager {
 	}
 
 	rem_client(client) {
-		console.log("client disconnected " + client.socket.id);
+		console.log("client disconnected " + client.id);
 		if (client.on_room) RoomMenu.quit_room(client);
-		this.id_to_client.delete(client.socket.id);
+		this.id_to_client.delete(client.id);
 	}
 
 	upd_client(client) {

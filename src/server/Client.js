@@ -1,11 +1,13 @@
+import cookie from "cookie";
+
 class Client {
 	constructor(socket) {
 		this.socket = socket;
+		// Should probably use this in the future as id
+		this.cookie_id = cookie.parse(socket.handshake.headers.cookie)["player_id"];
+		this.id = socket.id;
 		this.game = null;
 		this.wait_room = null;
-	}
-	get id() {
-		return this.socket.id;
 	}
 	get on_game() {
 		return this.game !== null;

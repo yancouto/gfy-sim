@@ -3,13 +3,23 @@ import socketIO from "socket.io";
 import path from "path";
 import * as Utils from "../common/Utils";
 import { CM as ClientManager } from "../server/ClientManager";
+import Cookies from "cookies";
+import { v4 as uuid4 } from "uuid";
 
 const PORT = process.env.PORT || 3000;
 
+const KEY = "player_id";
+
 const server = express();
-server.get("/", (req, res) =>
-	res.sendFile(path.join(__dirname, "../../index.html"))
-);
+server.get("/", (req, res) => {
+	const c = new Cookies(req, res);
+	let id = c.get(KEY);
+	if (id == null) {
+		id = uuid4();
+		c.set(KEY, id);
+	}
+	res.sendFile(path.join(__dirname, "../../index.html"));
+});
 server.use("/", express.static(path.join(__dirname, "../..")));
 const requestHandler = server.listen(PORT, () =>
 	console.log("Listening on " + PORT)

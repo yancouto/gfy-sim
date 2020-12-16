@@ -218,6 +218,8 @@ class RoomGamestate extends Gamestate {
 
 	sync_to_server(data) {
 		this.room = Object.setPrototypeOf(data.room, Room.prototype);
+		// Can we get cookies properly from here?
+		// Or in another way know which player we are
 		this.me = this.room.player_list.find(
 			(p) => p.pid == Utils.client_socket.id
 		);

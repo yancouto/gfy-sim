@@ -45,6 +45,13 @@ export class ClientManager {
 		if (client.game != null) {
 			console.log("Will wait for a reconnect");
 			client.connected = false;
+			setTimeout(() => {
+				if (!client.connected && client.on_room) {
+					console.log(`Disconnecting ${client.id} for real`);
+					RoomMenu.quit_room(client);
+					this.id_to_client.delete(client.id);
+				}
+			}, 5000);
 			return;
 		}
 		if (client.on_room) RoomMenu.quit_room(client);

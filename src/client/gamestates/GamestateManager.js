@@ -5,7 +5,7 @@ import RoomMenu from "./RoomMenu";
 import Room from "./RoomGamestate";
 import WaitRoom from "./WaitRoom";
 
-const GS = {"RoomMenu": RoomMenu, "Room": Room, "WaitRoom": WaitRoom};
+const GS = { RoomMenu: RoomMenu, Room: Room, WaitRoom: WaitRoom };
 
 class GamestateManager {
 	constructor() {

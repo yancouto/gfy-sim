@@ -10,6 +10,7 @@ import { GM as GamestateManager } from "./gamestates/GamestateManager";
 import RoomMenu from "../client/gamestates/RoomMenu";
 import RoomGS from "../client/gamestates/RoomGamestate";
 import WaitRoom from "../client/gamestates/WaitRoom";
+import ErrorGamestate from "../client/gamestates/ErrorGamestate";
 
 window.addEventListener("load", function () {
 	let last_time = 0;
@@ -21,7 +22,13 @@ window.addEventListener("load", function () {
 	};
 	window.requestAnimationFrame(game_loop);
 
-	GamestateManager.switch_to(new RoomMenu());
+	if (GamestateManager.cur_gs == null) {
+		GamestateManager.switch_to(new RoomMenu());
+	}
+});
+
+socket.on("error", (msg) => {
+	GamestateManager.switch_to(new ErrorGamestate(msg));
 });
 
 socket.emit("request update");

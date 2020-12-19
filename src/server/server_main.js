@@ -20,7 +20,10 @@ server.get("/", (req, res) => {
 	let id = c.get(KEY);
 	if (id == null) {
 		id = uuid4();
-		c.set(KEY, id);
+		c.set(KEY, id, {
+			// We want this to be visible from client js
+			httpOnly: false,
+		});
 	}
 	res.sendFile(path.join(__dirname, "../../index.html"));
 });

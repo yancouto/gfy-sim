@@ -13,6 +13,7 @@ import DisappearingDrawable from "../../client/drawables/DisappearingDrawable";
 
 import StickerPanel from "../../client/drawables/StickerPanel";
 import StickerList from "../../client/drawables/StickerList";
+import cookie from "cookie";
 
 function get_hand_color(room, turn) {
 	if (room.turn_i === turn) return "rgb(255, 0, 0)";
@@ -235,11 +236,8 @@ class RoomGamestate extends Gamestate {
 
 	sync_to_server(data) {
 		this.room = Object.setPrototypeOf(data.room, Room.prototype);
-		// Can we get cookies properly from here?
-		// Or in another way know which player we are
-		this.me = this.room.player_list.find(
-			(p) => p.pid == Utils.client_socket.id
-		);
+		const my_id = cookie.parse(document.cookie)["player_id"];
+		this.me = this.room.player_list.find((p) => p.pid == my_id);
 		for (const e of data.new_events) this.process_event(e);
 	}
 }

@@ -9,6 +9,12 @@ export class ClientManager {
 
 	add_client(socket) {
 		const c = new Client(socket);
+		if (this.id_to_client.has(c.id)) {
+			console.log(`Rejecting client ${c.id} that was already connected`);
+			socket.emit("error", "Client already connected.");
+			socket.disconnect();
+			return;
+		}
 		console.log("client connected " + c.id);
 		this.id_to_client.set(c.id, c);
 

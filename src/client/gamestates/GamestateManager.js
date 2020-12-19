@@ -1,6 +1,11 @@
 // Manages current gamestate and switching
 
 import RenderUtils from "../../client/RenderUtils";
+import RoomMenu from "./RoomMenu";
+import Room from "./RoomGamestate";
+import WaitRoom from "./WaitRoom";
+
+const GS = {"RoomMenu": RoomMenu, "Room": Room, "WaitRoom": WaitRoom};
 
 class GamestateManager {
 	constructor() {
@@ -8,12 +13,7 @@ class GamestateManager {
 	}
 
 	switch_to(gs) {
-		console.log(
-			"Switching from gamestate " +
-				(this.cur_gs ? this.cur_gs.name : "null") +
-				" to " +
-				(gs ? gs.name : "null")
-		);
+		console.log(`Switching from gamestate ${this.cur_gs?.name} to ${gs?.name}`);
 		if (this.cur_gs) this.cur_gs.exit();
 		this.cur_gs = gs; // improve this later, if necessary
 		if (this.cur_gs) this.cur_gs.enter();
@@ -30,18 +30,11 @@ class GamestateManager {
 	}
 
 	sync_data(data) {
-		if (this.cur_gs !== null) {
-			if (data.name != this.cur_gs.name) {
-				console.log(
-					"Data for wrong gamestate (" +
-						data.name +
-						" vs " +
-						this.cur_gs.name +
-						")."
-				);
-				this.cur_gs.wrong_data(data);
-			} else this.cur_gs.sync_to_server(data);
-		} else console.log("Data on null gamestate.");
+		if (data.name !== this.cur_gs?.name) {
+			const cls = GS[data.name];
+			this.switch_to(new cls());
+		}
+		this.cur_gs.sync_to_server(data);
 	}
 
 	get current_gamestate() {

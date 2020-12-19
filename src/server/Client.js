@@ -6,6 +6,7 @@ class Client {
 		this.id = cookie.parse(socket.handshake.headers.cookie)["player_id"];
 		this.game = null;
 		this.wait_room = null;
+		this.connected = true;
 	}
 	get on_game() {
 		return this.game !== null;

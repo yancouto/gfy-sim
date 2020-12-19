@@ -65,7 +65,6 @@ class WaitRoom {
 				p.client.game = game;
 				p.client.wait_room = null;
 				game.add_player(p.client.id, p.user_name);
-				p.client.socket.emit("switch gamestate", "Room");
 			}
 			game.room.turn_i = this.start_i;
 			RoomMenu.game_list.push(game);

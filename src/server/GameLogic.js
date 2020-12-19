@@ -82,7 +82,6 @@ class GameLogic {
 			client.game = null;
 			client.wait_room = wait_room;
 			wait_room.add_player(client, pi.name);
-			client.socket.emit("switch gamestate", "WaitRoom");
 		}
 		RoomMenu.wait_rooms.push(wait_room);
 	}

@@ -44,13 +44,11 @@ export class RoomMenu {
 				(w) => w.room.player_list.length > 0
 			);
 			client.game = null;
-			client.socket.emit("switch gamestate", "RoomMenu");
 		} else if (client.wait_room) {
 			console.log("Exiting wait room " + client.wait_room.name);
 			client.wait_room.rem_player(client);
 			this.wait_rooms = this.wait_rooms.filter((w) => w.player_list.length > 0);
 			client.wait_room = null;
-			client.socket.emit("switch gamestate", "RoomMenu");
 		} else console.warn("quit_room on client without room");
 	}
 
@@ -60,11 +58,9 @@ export class RoomMenu {
 		if (game instanceof GameLogic) {
 			client.game = game;
 			game.add_player(client.id, user_name);
-			client.socket.emit("switch gamestate", "Room");
 		} else {
 			client.wait_room = game;
 			game.add_player(client, user_name);
-			client.socket.emit("switch gamestate", "WaitRoom");
 		}
 	}
 }

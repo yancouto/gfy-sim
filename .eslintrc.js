@@ -1,11 +1,12 @@
 module.exports = {
     "env": {
         "browser": true,
-        "es6": true,
+        "es2021": true,
         "node": true
     },
     "plugins": ["prettier"],
     "extends": "prettier",
+    "parser": "@babel/eslint-parser",
     "parserOptions": {
         "sourceType": "module"
     },

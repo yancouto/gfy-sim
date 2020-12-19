@@ -8,15 +8,24 @@ export class ClientManager {
 	}
 
 	add_client(socket) {
-		const c = new Client(socket);
-		if (this.id_to_client.has(c.id)) {
-			console.log(`Rejecting client ${c.id} that was already connected`);
-			socket.emit("error", "Client already connected.");
-			socket.disconnect();
-			return;
-		}
+		let c = new Client(socket);
 		console.log("client connected " + c.id);
-		this.id_to_client.set(c.id, c);
+		const old_client = this.id_to_client.get(c.id);
+		if (old_client != null) {
+			if (!old_client.connected) {
+				console.log("Client reconnected!");
+				old_client.connected = true;
+				old_client.socket = socket;
+				c = old_client;
+			} else {
+				console.log(`Rejecting client ${c.id} that was already connected`);
+				socket.emit("error", "Client already connected.");
+				socket.disconnect();
+				return;
+			}
+		} else {
+			this.id_to_client.set(c.id, c);
+		}
 
 		const self = this;
 		socket.on("disconnect", () => self.rem_client(c));
@@ -33,6 +42,11 @@ export class ClientManager {
 
 	rem_client(client) {
 		console.log("client disconnected " + client.id);
+		if (client.game != null) {
+			console.log("Will wait for a reconnect");
+			client.connected = false;
+			return;
+		}
 		if (client.on_room) RoomMenu.quit_room(client);
 		this.id_to_client.delete(client.id);
 	}

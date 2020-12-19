@@ -7,9 +7,6 @@ const socket = io();
 console.log("my socket is " + socket.id);
 
 import { GM as GamestateManager } from "./gamestates/GamestateManager";
-import RoomMenu from "../client/gamestates/RoomMenu";
-import RoomGS from "../client/gamestates/RoomGamestate";
-import WaitRoom from "../client/gamestates/WaitRoom";
 import ErrorGamestate from "../client/gamestates/ErrorGamestate";
 
 window.addEventListener("load", function () {
@@ -21,10 +18,6 @@ window.addEventListener("load", function () {
 		GamestateManager.process(dt);
 	};
 	window.requestAnimationFrame(game_loop);
-
-	if (GamestateManager.cur_gs == null) {
-		GamestateManager.switch_to(new RoomMenu());
-	}
 });
 
 socket.on("error", (msg) => {
@@ -37,15 +30,6 @@ socket.on("update", function (data, do_not_request_more) {
 	GamestateManager.sync_data(data);
 	// is there reason to wait?
 	if (!do_not_request_more) socket.emit("request update");
-});
-
-socket.on("switch gamestate", function (name) {
-	let gs = null;
-	if (name === "RoomMenu") gs = new RoomMenu();
-	else if (name === "Room") gs = new RoomGS();
-	else if (name === "WaitRoom") gs = new WaitRoom();
-	else console.log("Unknown gamestate " + name);
-	if (gs !== null) GamestateManager.switch_to(gs);
 });
 
 import * as Utils from "../common/Utils";
